@@ -1,0 +1,148 @@
+@media (min-device-width : 375px) and (max-device-width : 667px) and (-webkit-min-device-pixel-ratio : 2){
+    /*iphone 6*/
+}
+@media (min-device-width : 414px) and (max-device-width : 736px) and (-webkit-min-device-pixel-ratio : 3){
+    /*iphone 6 plus*/
+}
+
+.configRow input{
+    background-repeat:no-repeat;
+    background-color: transparent;
+    padding-left: 12px;
+    border:none;
+    background-image: url(../img/icon_input.png);
+    font-size:14px;
+    background-size:100%;
+    
+}
+
+.cmdStateBtn{
+    width: 90px;
+    height: 90px;
+}
+
+.page1{
+    width:100%;
+    height:100%;
+    position:absolute;
+    left:0;
+    top:0;
+    
+}
+
+.devstatus{
+    width: 100%;
+    height:10%;
+    background-color: #7DB72F;
+    display:table;
+    text-align: left;
+}
+.main{
+    width: 100%;
+    height:80%;
+    text-align: center;
+}
+
+
+.devstatus .onlineImg{
+    height: 12px;
+    width: 15px;
+}
+.devstatus  .onlineText{
+    font-size: 15px;
+    color: #FFFFFF;
+}
+
+
+
+.centershow{
+    width: 100%;
+    text-align:center;
+}
+
+.cencell{
+    text-align:center;
+    word-break:break-all;
+    display:inline-block;
+    
+}
+.cencell input{
+    width:70px;
+    height:70px;
+}
+.blab{
+    font-size:12px;
+    color:gray;
+}
+
+
+
+span{
+    display:table-cell;
+    vertical-align:middle;
+}
+
+
+
+
+
+
+.bottomshow{
+    width: 100%;
+    display:table;
+    text-align:center;
+}
+.bomrow{
+    display:table-row;
+    height:60px;
+    line-height:60px;
+}
+
+.bomcell{
+    display:table-cell;
+    word-break:break-all;
+    overflow:auto;
+
+
+}
+.dtitle{
+    white-space:nowrap;
+    width:120px;
+    height:50px;
+    text-overflow:ellipsis;
+    -moz-text-overflow:ellipsis;
+    overflow:hidden;
+    text-align:right;
+}
+.bomcell input{
+    width:70px;
+    height:25px;
+    text-align:center;
+}
+
+
+
+.bomcell button{
+    font-size:14px;
+}
+
+
+
+.topshow{
+    width: 100%;
+    display:table;
+    text-align:center;
+    margin-top:20px;
+}
+.drow{
+    display:table-row;
+    height:50px;
+}
+.dcell{
+    height:100%;
+    display:table-cell;
+    border:1px solid gray;
+    word-break:break-all;
+    width:160px;
+    overflow:auto;
+}

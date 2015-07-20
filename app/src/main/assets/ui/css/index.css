@@ -1,0 +1,49 @@
+@media (min-device-width : 375px) and (max-device-width : 667px) and (-webkit-min-device-pixel-ratio : 2){
+    /*iphone 6*/
+}
+@media (min-device-width : 414px) and (max-device-width : 736px) and (-webkit-min-device-pixel-ratio : 3){
+    /*iphone 6 plus*/
+}
+
+.logo{
+    text-align: center;
+    margin:0,auto;
+    margin-top: 5px;
+    width:90px;
+    height:90px;
+   
+}
+.appTheme{
+    vertical-align: auto;
+    margin-top:10px;
+    top:0;
+}
+label{
+    width: 80px;
+    display: inline-block;
+}
+input{
+    background-repeat:round;
+    background-color: transparent;
+    padding-left: 40px;
+    border:none;
+    height: 35px;
+    width:180px;
+    font-size:20px;
+    background-size:100%;
+}
+div{
+    margin-top: 10px;
+}
+.username{
+    background-image: url(../img/username_background.png);
+}
+
+.password{
+    background-image: url(../img/password_background.png);
+}
+button{
+    margin-top:30px;
+    width:120px;
+    height:40px;
+}

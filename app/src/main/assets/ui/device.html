@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width,maximum-scale=1,user-scalable=no"/>
+            <script type="text/javascript" src="js/elapi.js" ></script>
+            <script type="text/javascript" src="js/jquery-2.1.0.js" ></script>
+            <title>设备列表</title>
+            <link rel="stylesheet" href="css/button.css" type="text/css" charset="utf-8"/>
+            <link rel="stylesheet" href="css/device.css" type="text/css" charset="utf-8"/>
+            <link rel="stylesheet" href="css/input.css" type="text/css" charset="utf-8"/>
+             <link rel="stylesheet" href="config/config.css" type="text/css" charset="utf-8"/>
+            <title></title>
+            <style type="text/css">
+                
+             </style>
+    </head>
+    <body>
+        
+        <div class="appTheme">
+            
+            <div class="page1" >
+                
+                <div class="devstatus">
+                    <span>
+                        <img class="onlineImg" src="img/icon_online.png"></img>
+                        <label class="onlineText">在线</label></span>
+                    
+                </div>
+                <div class="topshow"  style="display: none;">
+                    
+                </div>
+                <div class="centershow" style="display: none;">
+                    
+                </div>
+                <div class="bottomshow" style="display: none;">
+                    
+                </div>
+            </div>
+        </div>
+        
+        
+    </body>
+    <script type="text/javascript">
+        $(document).ready(function(){
+                          hyl_requestDeviceInfo();
+                          })
+                          
+                          
+                          
+                          function autoBuildHtml(device,clazz){
+                              var configHtml="";
+                              
+                              var fieldValues=device.fieldMap;
+                              
+                              var fields=clazz[device.classId];
+                              for(var j=0;j<fields.length;j++){
+                                  var field=fields[j];
+                                  var isExist=fieldIsExistInFieldMap(field,fieldValues);
+                                  var defaultVal;
+                                  var key=field.fieldId;
+                                  if(isExist){
+                                      defaultVal=fieldValues[key];
+                                  }else{
+                                      defaultVal=field.defaultValue;
+                                  }
+                                  
+                                  switch(field.widget){
+                                       case 1://是按钮，发送命令，不表状态
+                                    
+                                       var htmlString="<div class='bomrow'><div class='bomcell'><div class='dtitle'>"+field.displayName+"</div></div><div class='bomcell'><input value='"+defaultVal+"'></input></div><div class='bomcell'><button class='button blue' fieldId='"+field.fieldId+"' objectId='"+device.objectId+"' >发送</button></div> </div>";
+                                       
+                                       
+                                       
+                                       $(".bottomshow").show();
+                                       $(".bottomshow").append(htmlString);
+                                       
+
+                                             break;
+                                       case 2://是button，发送命令且表状态
+                                       var htmlString="<input type='image' class='cmdStateBtn'  ";
+                                       
+                                       
+                                       
+                                       
+                                       htmlString="<div class='cencell'><input type='image' class='cmdStateBtn' ";
+                                       if(defaultVal==0){
+                                           htmlString+=" src='img/bg_switch_off.png' ";
+                                       }else{
+                                           htmlString+=" src='img/bg_switch_on.png' ";
+                                       }
+                                       htmlString+=" value='"+(defaultVal)
+                                       +"' fieldId="+key+" objectId="
+                                       +device.objectId+"></input><div class='blab'>"+field.displayName+"</div></div>";
+                                       
+                                       
+                                       
+                                       
+                                       
+                                       $(".centershow").show();
+                                       $(".centershow").append(htmlString);
+
+                                             break;
+                                             /*
+                                       case 3://表配置存储，input框，放在第二界面
+                                       configHtml+="<div class='configRow'><label>"+field.displayName
+                                       +"</label><input value='"+defaultVal+"' fieldId="+key+"></input> </div>";
+                                      
+
+                                             break;*/
+                                       case 4://是显示标签 表状态
+                                       var htmlString="<div class='drow'><div class='dcell'>"+field.displayName+"</div><div class='dcell'>"+(defaultVal==""?"---":defaultVal)+"</div></div>";
+                                       
+                                       
+                                       $(".topshow").show();
+                                       $(".topshow").append(htmlString);
+
+                                             break;
+                                       default:
+                                             break;
+                                  }
+                                  
+                                  
+                              }
+                          }
+    
+    function loadDeviceInfoToHtml(device,clazz){
+        
+        
+        
+        
+        $(".topshow").empty();
+        $(".centershow").empty();
+        $(".bottomshow").empty();
+        
+        
+        //基本信息显示
+        if(device.netState==0){
+            $(".onlineImg").attr("src","img/icon_offline.png");
+            $(".onlineText").html("离线");
+        }else{
+            $(".onlineImg").attr("src","img/icon_online.png");
+            $(".onlineText").html("在线");
+        }
+        
+        autoBuildHtml(device,clazz);
+        
+        
+        $(".bottomshow .bomrow").each(function(){
+                                     
+                    var valueElement=$(this).find("input");
+                    $(this).find("button").click(function(){
+                                                                        
+        hyl_setFieldCmd(valueElement.val(),$(this).attr("fieldId"),$(this).attr("objectId"));
+                                                                         
+                                                                         });
+                                                           
+                                                           });
+                                                           $(".centershow input").each(function(){
+                                                                                       $(this).click(function(){
+                                                                                                     
+                                                                                                     if($(this).attr("value")==0){
+                                                                                                     $(this).attr("value","1");
+                                                                                                     $(this).attr("src","img/bg_switch_on.png");
+                                                                                                     }else{
+                                                                                                     $(this).attr("value","0");
+                                                                                                     $(this).attr("src","img/bg_switch_off.png");
+                                                                                                     }
+                                                                                                     
+                                                                                                     hyl_setFieldCmd($(this).attr("value"),$(this).attr("fieldId"),$(this).attr("objectId"));
+                                                                                                     
+                                                                                                     });
+                                                                                       
+                                                                                       });
+                                                                                       
+    }
+    
+    
+       
+        </script>
+</html>

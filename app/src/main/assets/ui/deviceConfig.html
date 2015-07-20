@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width,maximum-scale=1,user-scalable=no"/>
+            <script type="text/javascript" src="js/elapi.js" ></script>
+            <script type="text/javascript" src="js/jquery-2.1.0.js" ></script>
+            <title>设备列表</title>
+            <link rel="stylesheet" href="css/button.css" type="text/css" charset="utf-8"/>
+            <link rel="stylesheet" href="css/deviceConfig.css" type="text/css" charset="utf-8"/>
+            <link rel="stylesheet" href="config/config.css" type="text/css" charset="utf-8"/>
+            <title></title>
+            <style type="text/css">
+                
+                </style>
+            </head>
+    <body>
+        
+        <div class="appTheme">
+            <div class="page2">
+                <div class="configHeader">
+                    <span><label>基本信息配置</label><span>
+                </div>
+                <div class="configBody">
+                    
+                    
+                    
+                    
+                </div>
+                
+                
+            </div>
+        </div>
+        
+        
+    </body>
+    <script type="text/javascript">
+        $(document).ready(function(){
+                          hyl_requestDeviceInfo();
+                          })
+                    
+    
+    function autoBuildHtml(device,clazz){
+        var configHtml="";
+        
+        var fieldValues=device.fieldMap;
+        
+        var fields=clazz[device.classId];
+        for(var j=0;j<fields.length;j++){
+            var field=fields[j];
+            var isExist=fieldIsExistInFieldMap(field,fieldValues);
+            var defaultVal;
+            var key=field.fieldId;
+            if(isExist){
+                defaultVal=fieldValues[key];
+            }else{
+                defaultVal=field.defaultValue;
+            }
+            if(field.widget==3){
+                configHtml+="<div class='configRow'><label>"+field.displayName
+                +"</label><input value='"+defaultVal+"' fieldId="+key+"></input> </div>";
+
+            }
+        }
+        return configHtml;
+    }
+    
+    function loadDeviceInfoToHtml(device,clazz){
+        
+        
+        
+        $(".configBody").empty();
+        
+        
+        var configHtml=autoBuildHtml(device,clazz);
+        
+        
+        $(".configBody").append("<div class='configRow'><label>名称</label><input value='"+device.name+"'></input> </div>");
+        $(".configBody").append("<div class='configRow'><label>序列号</label><input value='"+device.clientSn+"' disabled='disabled'></input> </div>");
+        
+        $(".configBody").append(configHtml);
+        
+        $(".configBody").append(" <div class='configRow'><button class='button blue'  id='configBtn' objectid="+device.objectId+">保存</button></div>");
+        
+        $("#configBtn").click(function(){
+                              var objectId=$(this).attr('objectid');
+                              
+                              $(".configRow input").each(function(){
+                                                         if($(this).attr("fieldId")==undefined&&$(this).attr('disabled')==undefined){
+                                                         hyl_updateDeviceName($(this).val(),objectId);
+                                                         }else if($(this).attr('disabled')==undefined){
+                                                         hyl_setFieldCmd($(this).val(),$(this).attr("fieldId"),objectId);
+                                                         }
+                                                         
+                                                         
+                                                         });
+                              
+                              });
+                              
+                                                                                       
+    }
+    
+    
+    
+        </script>
+</html>

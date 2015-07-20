@@ -1,0 +1,73 @@
+@media (min-device-width : 375px) and (max-device-width : 667px) and (-webkit-min-device-pixel-ratio : 2){
+    /*iphone 6*/
+}
+@media (min-device-width : 414px) and (max-device-width : 736px) and (-webkit-min-device-pixel-ratio : 3){
+    /*iphone 6 plus*/
+}
+
+.configRow input{
+    background-repeat:no-repeat;
+    background-color: transparent;
+    padding-left: 12px;
+    border:none;
+    background-image: url(../img/icon_input.png);
+    font-size:14px;
+    background-size:100%;
+    
+}
+
+.cmdStateBtn{
+    width: 90px;
+    height: 90px;
+}
+
+
+
+
+.page2{
+    width:100%;
+    height:100%;
+    position:absolute;
+    left:0;
+    top:0;
+}
+.configHeader{
+    width: 100%;
+    height: 10%;
+    background-color: #7DB72F;
+    display:table;
+}
+.configHeader label{
+    color: #FFFFFF;
+    font-size: 15px;
+}
+
+.configBody{
+    width: 100%;
+    height: 50%;
+}
+.configRow{
+    width: 100%;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+}
+
+.configRow label{
+    width: 20%;
+    height: 50px;
+    display: inline-block;
+}
+.configRow input{
+    height:30px;
+    width:180px;
+}
+.configRow button{
+    height:40px;
+    width:120px;
+}
+
+span{
+    display:table-cell;
+    vertical-align:middle;
+}

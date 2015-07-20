@@ -1,0 +1,85 @@
+@media (min-device-width : 375px) and (max-device-width : 667px) and (-webkit-min-device-pixel-ratio : 2){
+    /*iphone 6*/
+}
+@media (min-device-width : 414px) and (max-device-width : 736px) and (-webkit-min-device-pixel-ratio : 3){
+    /*iphone 6 plus*/
+}
+
+body{
+}
+
+#deviceTable{
+	width: 100%;
+	height: 100%;
+	border-collapse: collapse;
+}
+#deviceTable tr{
+	height: 60px;
+	border-bottom-color: #7DB72F;
+}
+#deviceTable td{
+	font: "微软雅黑";
+	font-size:18px;
+}
+#deviceTable td .icon{
+	width: 50px;
+	height: 50px;
+	vertical-align:middle;
+	font-size:25px;
+}
+#deviceTable td img{
+	width: 50px;
+	height: 50px;
+	vertical-align:middle;
+}
+#deviceTable td div{
+    height:100%;
+    width:100%;
+}
+
+#deviceTable td div .name{
+  width:100%;
+  position: relative;
+  top: 0px;
+  left: 0px;
+  float: left;
+}
+#deviceTable td div .onlineImg{
+	position:relative;
+	top:16px;
+	left:0px;
+	float:left;
+	width: 15px;
+	height: 15px;
+	
+}
+#deviceTable td div .onlineText{
+	position:relative;
+	top: 18px;
+	left: 0px;
+	float:left;
+	font-size: 10px;
+}
+#deviceTable tr .command{
+	width: 60px;
+}
+#deviceTable tr td .switchButton{
+	height: 50px;
+	width: 50px;
+	float: right;
+	right: 5px;
+
+}
+
+.on{
+	background-color:#DCDCDC;
+}
+
+#deviceTable  td .btn{
+	height: 50px;
+	width: 50px;
+	background-image: url(../img/bg_switch_on.png);
+	background-repeat:round;
+	float: right;
+	right: 5px;
+}

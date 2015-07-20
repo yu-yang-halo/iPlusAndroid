@@ -1,0 +1,60 @@
+.bottomshow input {
+	padding: 5px;
+	font-size: 15px;
+	text-shadow: 0px 1px 0px #fff;
+	outline: none;
+	background: -webkit-gradient(linear, left top, left bottom, from(#bcbcbe), to(#ffffff));
+	background: -moz-linear-gradient(top,  #bcbcbe,  #ffffff);
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	border: 1px solid #717171;
+	-webkit-box-shadow: 1px 1px 0px #efefef;
+	-moz-box-shadow: 1px 1px 0px #efefef;
+	box-shadow:  1px 1px 0px #efefef;
+}
+
+.bottomshow input.image-sprites {
+	padding: 4px 1px 4px 6px;
+	height: 27px;
+	width: 390px;
+	outline: none;
+	background: url('../img/input.png') top center no-repeat;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+	border: 0;
+	-webkit-box-shadow: 0 0 0;
+	-moz-box-shadow: 0 0 0;
+	box-shadow: 0 0 0;
+}
+
+.bottomshow  input.image-sprites:focus {
+		background: url('../img/input.png') bottom center no-repeat;
+		-webkit-box-shadow: 0px 0px 0px;
+		-moz-box-shadow: 0px 0px 0px;
+		box-shadow: 0px 0px 0px;
+		height: 27px;
+	}
+	
+.bottomshow  input.fail {
+	-webkit-box-shadow: 0px 0px 5px #ff4848;
+	-moz-box-shadow: 0px 0px 5px #ff4848;
+	box-shadow: 0px 0px 5px #ff4848;
+}
+	
+.bottomshow  input:focus {
+		-webkit-box-shadow: 0px 0px 5px #007eff;
+		-moz-box-shadow: 0px 0px 5px #007eff;
+		box-shadow: 0px 0px 5px #007eff;
+	}
+
+	a, a:visited {
+		color: #000;
+		text-decoration: none;
+		text-shadow: 0px 1px 0px #fff;
+	}
+	
+	a:hover {
+		border-bottom: 1px dotted #fff;
+	}

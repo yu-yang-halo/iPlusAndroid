@@ -1,0 +1,28 @@
+body{
+ /*配置应用的背景*/
+ background-color:#ffffff;
+}
+/*网页字体*/
+label{
+    color:#000000;
+}
+/*设备详细状态栏背景色*/
+.devstatus{
+    background-color: #7DB72F;;
+}
+/*设备详细配置栏背景色*/
+.configHeader{
+    background-color: #7DB72F;
+}
+
+
+
+
+
+
+.logo{
+    background: url(../img/icon57.png);
+    background-size:cover;
+    background-position:center;
+    visibility:hidden;
+}
