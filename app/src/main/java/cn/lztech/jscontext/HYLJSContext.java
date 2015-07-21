@@ -29,17 +29,25 @@ import cn.lztech.newiplus.R;
 public class HYLJSContext {
     public final static  String key_objectId="objectId_KEY";
     public final static  String key_classId="classId_KEY";
+    public final static  String key_deviceName="deviceName_KEY";
     public final static  String key_currentDeviceObjectJSON="currentDeviceObject_KEY";
     public Context mContext;
     private HYLJNAHandler mhylhandler;
     private WebView mwebView;
     private Gson gson=new Gson();
     public  Bundle needBundle;
-
+    private DeviceObject deviceObject;
 
     public HYLJSContext(Context context, WebView webView) {
         this.mContext = context;
         this.mwebView = webView;
+    }
+
+    public Bundle getNeedBundle() {
+        if(needBundle==null){
+            return new Bundle();
+        }
+        return needBundle;
     }
 
     public void setCurrentHandler(HYLJNAHandler handler) {
@@ -64,8 +72,10 @@ public class HYLJSContext {
                     String  clsJSON=gson.toJson(clsMap);
                     String  devJSON=msg.getData().getString(key_currentDeviceObjectJSON);
                     System.out.println("devJSON:"+devJSON +"\n  clsJSON:"+clsJSON);
+                    mhylhandler.onSaveBundle(msg.getData());
 
                     mwebView.loadUrl("javascript:loadDeviceInfoToHtml("+devJSON+","+clsJSON+")");
+                    mhylhandler.onSaveBundle(msg.getData());
                     break;
                 default:
                     break;
@@ -73,6 +83,23 @@ public class HYLJSContext {
 
         }
     };
+    @JavascriptInterface
+    public void mobile_setFieldCmd(final String fieldValue, final String fieldId, final String objectId){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    WSConnector.getInstance().setFieldValue(Integer.parseInt(objectId),Integer.parseInt(fieldId),fieldValue,true);
+                    getNeedBundle().putInt(key_objectId, Integer.parseInt(objectId));
+                    mobile_requestDeviceInfo();
+                } catch (WSException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+
+    }
 
     @JavascriptInterface
     public  void  mobile_requestDeviceInfo(){
@@ -83,7 +110,7 @@ public class HYLJSContext {
                      @Override
                      public void run() {
                          try {
-                             DeviceObject deviceObject = WSConnector.getInstance().getObjectValue(objectId);
+                             deviceObject = WSConnector.getInstance().getObjectValue(objectId);
 
                              if(deviceObject!=null){
 
@@ -93,6 +120,7 @@ public class HYLJSContext {
                                  bundle.putInt(key_objectId,deviceObject.getObjectId());
                                  bundle.putInt(key_classId,deviceObject.getClassId());
                                  bundle.putString(key_currentDeviceObjectJSON, gson.toJson(deviceObject));
+                                 bundle.putString(key_deviceName,deviceObject.getName());
                                  msg.setData(bundle);
                                  mhander.sendMessage(msg);
                              }
@@ -112,7 +140,6 @@ public class HYLJSContext {
         Bundle bundle=new Bundle();
         bundle.putInt(key_objectId,Integer.parseInt(objectId));
         mhylhandler.onSaveBundle(bundle);
-
     }
 
 

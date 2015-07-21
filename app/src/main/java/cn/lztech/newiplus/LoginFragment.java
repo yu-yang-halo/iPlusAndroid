@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
@@ -16,6 +18,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import cn.lztech.cache.HYLResourceUtils;
 import cn.lztech.jscontext.HYLJSContext;
 
 /**
@@ -25,10 +28,24 @@ public class LoginFragment extends Fragment {
     private  OnHYLWebHandler loginHandler;
     private  WebView webView;
     private  SwipeRefreshLayout  mSwipeLayout;
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_hylactivity_login, menu);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.login,container,false);
+
+        this.getActivity().getActionBar().setTitle("海易联");
 
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         webView=(WebView) view.findViewById(R.id.webview);
@@ -45,9 +62,11 @@ public class LoginFragment extends Fragment {
         mSwipeLayout.setSize(SwipeRefreshLayout.LARGE);
 
 
+        String indexPath=HYLResourceUtils.rootPath(this.getActivity())+"ui/index.html";
 
+        System.out.println("indexPath "+indexPath);
 
-        webView.loadUrl("file:///android_asset/ui/index.html");
+        webView.loadUrl(indexPath);
         WebSettings setting = webView.getSettings();
         setting.setJavaScriptEnabled(true);
         setting.setDefaultTextEncodingName("GBK");

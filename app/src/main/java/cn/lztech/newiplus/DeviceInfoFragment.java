@@ -6,12 +6,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import cn.lztech.cache.HYLResourceUtils;
 import cn.lztech.jscontext.HYLJSContext;
 
 /**
@@ -20,6 +23,18 @@ import cn.lztech.jscontext.HYLJSContext;
 public class DeviceInfoFragment extends Fragment {
     SwipeRefreshLayout mSwipeLayout;
     WebView webView;
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_deviceconfig, menu);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -31,7 +46,7 @@ public class DeviceInfoFragment extends Fragment {
         mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
+                webView.reload();
             }
         });
         mSwipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
@@ -39,13 +54,24 @@ public class DeviceInfoFragment extends Fragment {
                 android.R.color.holo_red_light);
         mSwipeLayout.setSize(SwipeRefreshLayout.LARGE);
 
-        webView.loadUrl("file:///android_asset/ui/device.html");
+        String infoPath= HYLResourceUtils.rootPath(this.getActivity())+"ui/device.html";
+
+        System.out.println("infoPath " + infoPath);
+
+        webView.loadUrl(infoPath);
 
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
-                super.onProgressChanged(view, newProgress);
-                Log.i("onProgressChanged", newProgress + "---");
+
+                if (newProgress == 100) {
+                    mSwipeLayout.setRefreshing(false);
+                    Log.i("progress ", "" + newProgress);
+                } else {
+                    if (!mSwipeLayout.isRefreshing()) {
+                        mSwipeLayout.setRefreshing(true);
+                    }
+                }
             }
         });
 
@@ -56,15 +82,16 @@ public class DeviceInfoFragment extends Fragment {
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         HYLJSContext JSContext=new HYLJSContext(this.getActivity(),webView);
         JSContext.needBundle=this.getArguments();
+
+
         JSContext.setCurrentHandler(new HYLJSContext.HYLJNAHandler() {
             @Override
             public void onSimpleCallback(HYLJSContext.JNAResult result) {
 
             }
-
             @Override
             public void onSaveBundle(Bundle bundle) {
-
+                DeviceInfoFragment.this.getActivity().getActionBar().setTitle(bundle.getString(HYLJSContext.key_deviceName));
             }
         });
         webView.addJavascriptInterface(JSContext, "jna");

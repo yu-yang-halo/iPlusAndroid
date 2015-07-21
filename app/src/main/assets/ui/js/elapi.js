@@ -75,7 +75,12 @@ function hyl_setFieldCmd(fieldValue,fieldId,objectId){
 }
 
 function hyl_updateDeviceName(name,objectId){
-    mobile_updateDeviceName(name,objectId);
+      if(browser.versions.android){
+         window.jna.mobile_updateDeviceName(name,objectId);
+      }else{
+         mobile_updateDeviceName(name,objectId);
+      }
+
 }
 
 

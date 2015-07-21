@@ -9,6 +9,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
@@ -26,6 +28,7 @@ import cn.elnet.andrmb.elconnector.ClassObject;
 import cn.elnet.andrmb.elconnector.DeviceObject;
 import cn.elnet.andrmb.elconnector.WSConnector;
 import cn.elnet.andrmb.elconnector.WSException;
+import cn.lztech.cache.HYLResourceUtils;
 import cn.lztech.cache.HYLSharePreferences;
 import cn.lztech.jscontext.HYLJSContext;
 
@@ -42,13 +45,19 @@ public class DeviceDetailFragment extends Fragment {
         super.onAttach(activity);
         devInfoHandler=(OnHYLWebHandler)activity;
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.devicedetail,container,false);
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         webView=(WebView) view.findViewById(R.id.webview);
-
+        this.getActivity().getActionBar().setTitle("设备列表");
 
         mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -61,7 +70,11 @@ public class DeviceDetailFragment extends Fragment {
                 android.R.color.holo_red_light);
         mSwipeLayout.setSize(SwipeRefreshLayout.LARGE);
 
-        webView.loadUrl("file:///android_asset/ui/devices.html");
+        String detailPath= HYLResourceUtils.rootPath(this.getActivity())+"ui/devices.html";
+
+        System.out.println("detailPath " + detailPath);
+
+        webView.loadUrl(detailPath);
 
         webView.setWebChromeClient(new WebChromeClient() {
             @Override

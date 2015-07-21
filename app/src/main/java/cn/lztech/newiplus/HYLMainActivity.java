@@ -15,6 +15,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import cn.lztech.cache.HYLResourceUtils;
+import cn.lztech.cache.HYLSharePreferences;
 import cn.lztech.jscontext.HYLJSContext;
 
 
@@ -25,6 +27,8 @@ public class HYLMainActivity extends Activity  implements OnHYLWebHandler{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hylactivity_login);
+        HYLSharePreferences.cacheDownloadDirName(this, null);
+
 
         if (findViewById(R.id.fragment_container) != null) {
             if (savedInstanceState != null) {
@@ -36,12 +40,14 @@ public class HYLMainActivity extends Activity  implements OnHYLWebHandler{
 
         }
 
+
+        //HYLResourceUtils.startDownloadUI(this,"zjdev1");
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_hylactivity_login, menu);
+
         return super.onCreateOptionsMenu(menu);
     }
     @Override

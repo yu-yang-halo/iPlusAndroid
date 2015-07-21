@@ -20,6 +20,20 @@ public class HYLSharePreferences {
     private final  static  String preference_key="cn.lztech.iPlus.share_key";
     private final  static  String userbname_key="cn.lztech.iPlus.username_key";
     private final  static  String password_key="cn.lztech.iPlus.password_key";
+    private final  static  String downloaduiresource_key="downloaduiresource_key";
+
+    public static void  cacheDownloadDirName(Context ctx,String dirName){
+        SharedPreferences sharedPref = ctx.getSharedPreferences(preference_key, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(downloaduiresource_key,dirName);
+        editor.commit();
+    }
+    public static String  getDownloadDirName(Context ctx){
+        SharedPreferences sharedPreferences=ctx.getSharedPreferences(preference_key, Context.MODE_PRIVATE);
+        String dirname=sharedPreferences.getString(downloaduiresource_key, null);
+        return dirname;
+    }
+
     public static  void  cacheUsernamePassword(Context ctx, String username,String password){
         SharedPreferences sharedPref = ctx.getSharedPreferences(preference_key, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
