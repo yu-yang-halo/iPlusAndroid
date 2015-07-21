@@ -24,4 +24,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile files('libs/ElianService_SDK.jar')
     compile files('libs/gson-1.6.jar')
+    compile files('libs/gson-2.1.jar')
 }

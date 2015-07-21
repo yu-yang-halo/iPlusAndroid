@@ -3,10 +3,8 @@ package cn.lztech.newiplus;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -16,13 +14,8 @@ import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -33,7 +26,7 @@ import cn.elnet.andrmb.elconnector.ClassObject;
 import cn.elnet.andrmb.elconnector.DeviceObject;
 import cn.elnet.andrmb.elconnector.WSConnector;
 import cn.elnet.andrmb.elconnector.WSException;
-import cn.lztech.cn.lztech.cache.HYLSharePreferences;
+import cn.lztech.cache.HYLSharePreferences;
 import cn.lztech.jscontext.HYLJSContext;
 
 /**
@@ -43,7 +36,12 @@ public class DeviceDetailFragment extends Fragment {
 
     SwipeRefreshLayout mSwipeLayout;
     WebView webView;
-
+    OnHYLWebHandler devInfoHandler;
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        devInfoHandler=(OnHYLWebHandler)activity;
+    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,12 +49,11 @@ public class DeviceDetailFragment extends Fragment {
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         webView=(WebView) view.findViewById(R.id.webview);
 
+
         mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //重新刷新页面
-                new RefreshDeviceListTask(DeviceDetailFragment.this.getActivity(), webView, mSwipeLayout).execute((String[]) null);
-
+                new RefreshDeviceListTask(DeviceDetailFragment.this.getActivity(),webView,mSwipeLayout).execute((String[]) null);
             }
         });
         mSwipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
@@ -66,12 +63,19 @@ public class DeviceDetailFragment extends Fragment {
 
         webView.loadUrl("file:///android_asset/ui/devices.html");
 
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                super.onProgressChanged(view, newProgress);
+                Log.i("onProgressChanged",newProgress+"---");
+            }
+        });
+
+
         WebSettings setting = webView.getSettings();
-        setting.setJavaScriptEnabled(true);//支持js
-        setting.setDefaultTextEncodingName("GBK");//设置字符编码
-        webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);//滚动条风格，为0指滚动条不占用空间，直接覆盖在网页上
-
-
+        setting.setJavaScriptEnabled(true);
+        setting.setDefaultTextEncodingName("GBK");
+        webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         HYLJSContext JSContext=new HYLJSContext(this.getActivity(),webView);
         JSContext.setCurrentHandler(new HYLJSContext.HYLJNAHandler() {
             @Override
@@ -80,22 +84,19 @@ public class DeviceDetailFragment extends Fragment {
 
                 }
             }
+
+            @Override
+            public void onSaveBundle(Bundle bundle) {
+                devInfoHandler.toDeviceInfo(bundle);
+            }
         });
         webView.addJavascriptInterface(JSContext, "jna");
 
-        new RefreshDeviceListTask(DeviceDetailFragment.this.getActivity(), webView,mSwipeLayout).execute((String[]) null);
+        new RefreshDeviceListTask(DeviceDetailFragment.this.getActivity(),webView,mSwipeLayout).execute((String[]) null);
 
 
 
         return view;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-
-
     }
 
 
@@ -124,6 +125,7 @@ public class DeviceDetailFragment extends Fragment {
 
                 Map<Integer,List> allClassObjs=new HashMap<Integer,List>();
                 Map<Integer,String> allClassIcons=new HashMap<Integer,String>();
+
                 for(DeviceObject dev : devlist){
                     ClassObject clsObj=HYLSharePreferences.classObjectFromCache(DeviceDetailFragment.this.getActivity(), dev.getClassId());
 
@@ -149,19 +151,34 @@ public class DeviceDetailFragment extends Fragment {
         @Override
         protected void onPostExecute(String[] s) {
             super.onPostExecute(s);
+
+            mSwipeLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    mSwipeLayout.setRefreshing(false);
+                }
+            });
+
             mwebview.loadUrl("javascript:hyl_loadDevicesData(" + s[0] + "," + s[1] + "," + s[2] + ")");
-            mSwipeLayout.setRefreshing(false);
-           Log.i("onPostExecute"," 加载完成。。。");
+
+            Log.i("onPostExecute"," end ..");
 
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Log.i("onPreExecute","  开始加载。。。");
-            if(!mSwipeLayout.isRefreshing()){
-                mSwipeLayout.setRefreshing(true);
-            }
+            Log.i("onPreExecute","  start..");
+            mSwipeLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    if(!mSwipeLayout.isRefreshing()){
+                        mSwipeLayout.setRefreshing(true);
+                    }
+                }
+            });
+
+
         }
     }
 }

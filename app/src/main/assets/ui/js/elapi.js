@@ -66,7 +66,12 @@ function hyl_requestDevicesCmd(){
 }
 //发送设备命令
 function hyl_setFieldCmd(fieldValue,fieldId,objectId){
-    mobile_setFieldCmd(fieldValue,fieldId,objectId);
+      if(browser.versions.android){
+         window.jna.mobile_setFieldCmd(fieldValue,fieldId,objectId);
+      }else{
+         mobile_setFieldCmd(fieldValue,fieldId,objectId);
+      }
+
 }
 
 function hyl_updateDeviceName(name,objectId){
@@ -76,7 +81,13 @@ function hyl_updateDeviceName(name,objectId){
 
 //跳转到设备详细界面
 function hyl_toDetailPage(objectId){
-    mobile_toDetailPage(objectId);
+    if(browser.versions.android){
+       window.jna.mobile_toDetailPage(objectId);
+    }else{
+      mobile_toDetailPage(objectId);
+    }
+
+
 }
 function hyl_loadDevicesData(devices,classTable,classIcon){
 
@@ -221,7 +232,7 @@ function load(){
                         $(this).addClass("on").siblings("tr").removeClass("on");
                         
                         
-                        hyl_toDetailPage($(this).attr('objectId'));
+                           hyl_toDetailPage($(this).attr('objectId'));
                         
                         });
     
@@ -233,11 +244,15 @@ function load(){
 
 
 
-//详细设备界面
+//请求详细设备界面数据信息
 
 
 function hyl_requestDeviceInfo(){
-    mobile_requestDeviceInfo();
+    if(browser.versions.android){
+           window.jna.mobile_requestDeviceInfo();
+     }else{
+          mobile_requestDeviceInfo();
+     }
 }
 
 

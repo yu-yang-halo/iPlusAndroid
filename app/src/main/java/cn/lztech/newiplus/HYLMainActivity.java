@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -18,7 +19,7 @@ import cn.lztech.jscontext.HYLJSContext;
 
 
 
-public class HYLMainActivity extends Activity  implements LoginFragment.OnLoginHandler{
+public class HYLMainActivity extends Activity  implements OnHYLWebHandler{
     private  static String ACTIVITY_LOG="HYLMainActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +33,29 @@ public class HYLMainActivity extends Activity  implements LoginFragment.OnLoginH
             LoginFragment firstFragment = new LoginFragment();
             firstFragment.setArguments(getIntent().getExtras());
             getFragmentManager().beginTransaction().add(R.id.fragment_container,firstFragment).commit();
+
         }
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_hylactivity_login, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     public void canLogin(boolean iscanlogin) {
         if (iscanlogin) {
             DeviceDetailFragment detailFragment=new DeviceDetailFragment();
@@ -43,6 +64,19 @@ public class HYLMainActivity extends Activity  implements LoginFragment.OnLoginH
             transaction.addToBackStack(null);
             transaction.commit();
         }
+    }
+    public void toDeviceInfo(Bundle bundle){
+        int objectId= bundle.getInt(HYLJSContext.key_objectId);
+        if(objectId>0){
+            DeviceInfoFragment deviceInfoFragment=new DeviceInfoFragment();
+            deviceInfoFragment.setArguments(bundle);
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container,deviceInfoFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+
+        }
+
     }
 
 }

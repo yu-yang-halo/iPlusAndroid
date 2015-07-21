@@ -1,14 +1,17 @@
-package cn.lztech.cn.lztech.cache;
+package cn.lztech.cache;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
+
+import cn.elnet.andrmb.elconnector.ClassField;
 import cn.elnet.andrmb.elconnector.ClassObject;
 import cn.elnet.andrmb.elconnector.WSConnector;
 import cn.elnet.andrmb.elconnector.WSException;
-import cn.lztech.newiplus.R;
 
 /**
  * Created by Administrator on 2015/7/17.
@@ -39,17 +42,24 @@ public class HYLSharePreferences {
         String  clsJSON=sharedPreferences.getString(classId.toString(), null);
         ClassObject clsobj=null;
         Gson gson=new Gson();
+        Type clstype = new TypeToken<ClassObject<ClassField>>(){}.getType();
+
         if(clsJSON==null){
             try {
                 clsobj = WSConnector.getInstance().getClass(classId);
                 if(clsobj!=null) {
-                    sharedPreferences.edit().putString(classId.toString(), gson.toJson(clsobj));
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                    editor.putString(classId.toString(), gson.toJson(clsobj,clstype));
+                    editor.commit();
+
                 }
             } catch (WSException e) {
                 e.printStackTrace();
             }
         }else{
-            clsobj=gson.fromJson(clsJSON,ClassObject.class);
+
+            clsobj=gson.fromJson(clsJSON,clstype);
         }
 
         return clsobj;

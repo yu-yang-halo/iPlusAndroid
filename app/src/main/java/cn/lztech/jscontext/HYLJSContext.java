@@ -9,43 +9,63 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import com.google.gson.Gson;
 
-import cn.elnet.andrmb.elconnector.ErrorCode;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import cn.elnet.andrmb.elconnector.ClassField;
+import cn.elnet.andrmb.elconnector.ClassObject;
+import cn.elnet.andrmb.elconnector.DeviceObject;
 import cn.elnet.andrmb.elconnector.WSConnector;
 import cn.elnet.andrmb.elconnector.WSException;
-import cn.elnet.andrmb.elconnector.util.MD5Generator;
-import cn.elnet.andrmb.elconnector.util.Util;
-import cn.lztech.cn.lztech.cache.HYLSharePreferences;
+import cn.lztech.cache.HYLSharePreferences;
 import cn.lztech.newiplus.R;
 
 /**
  * Created by Administrator on 2015/7/16.
  */
 public class HYLJSContext {
+    public final static  String key_objectId="objectId_KEY";
+    public final static  String key_classId="classId_KEY";
+    public final static  String key_currentDeviceObjectJSON="currentDeviceObject_KEY";
     public Context mContext;
-    private HYLJNAHandler mhandler;
+    private HYLJNAHandler mhylhandler;
     private WebView mwebView;
+    private Gson gson=new Gson();
+    public  Bundle needBundle;
 
-    public HYLJSContext(Context context,WebView webView){
+
+    public HYLJSContext(Context context, WebView webView) {
         this.mContext = context;
-        this.mwebView=webView;
+        this.mwebView = webView;
     }
 
-    public void setCurrentHandler(HYLJNAHandler handler){
-        mhandler=handler;
+    public void setCurrentHandler(HYLJNAHandler handler) {
+        mhylhandler = handler;
     }
 
-    private Handler mhander=new Handler(){
+    private Handler mhander = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what){
-                case 0://初始化记住的用户名和密码
-                    String[]  userpass=HYLSharePreferences.getUsernamePassword(mContext);
-                    if(userpass!=null){
+            switch (msg.what) {
+                case 0:
+                    String[] userpass = HYLSharePreferences.getUsernamePassword(mContext);
+                    if (userpass != null) {
                         mwebView.loadUrl("javascript: hyl_setUsernamePassToView('" + userpass[0] + "','" + userpass[1] + "')");
                     }
 
+                    break;
+                case 1:
+                    ClassObject clsobj= HYLSharePreferences.classObjectFromCache(mContext, msg.getData().getInt(key_classId));
+                    Map<Integer,List<ClassField>> clsMap=new HashMap<Integer,List<ClassField>>();
+                    clsMap.put(clsobj.getClassId(),clsobj.getClassFeilds());
+                    String  clsJSON=gson.toJson(clsMap);
+                    String  devJSON=msg.getData().getString(key_currentDeviceObjectJSON);
+                    System.out.println("devJSON:"+devJSON +"\n  clsJSON:"+clsJSON);
+
+                    mwebView.loadUrl("javascript:loadDeviceInfoToHtml("+devJSON+","+clsJSON+")");
                     break;
                 default:
                     break;
@@ -55,13 +75,57 @@ public class HYLJSContext {
     };
 
     @JavascriptInterface
+    public  void  mobile_requestDeviceInfo(){
+         if(needBundle!=null){
+           final int objectId= needBundle.getInt(key_objectId);
+             if(objectId>0){
+                 new Thread(){
+                     @Override
+                     public void run() {
+                         try {
+                             DeviceObject deviceObject = WSConnector.getInstance().getObjectValue(objectId);
+
+                             if(deviceObject!=null){
+
+                                 Message msg=new Message();
+                                 msg.what=1;
+                                 Bundle bundle=new Bundle();
+                                 bundle.putInt(key_objectId,deviceObject.getObjectId());
+                                 bundle.putInt(key_classId,deviceObject.getClassId());
+                                 bundle.putString(key_currentDeviceObjectJSON, gson.toJson(deviceObject));
+                                 msg.setData(bundle);
+                                 mhander.sendMessage(msg);
+                             }
+                         } catch (WSException e) {
+                             e.printStackTrace();
+                         }
+
+                     }
+                 }.start();
+             }
+
+         }
+    }
+
+    @JavascriptInterface
+    public void mobile_toDetailPage(String objectId) {
+        Bundle bundle=new Bundle();
+        bundle.putInt(key_objectId,Integer.parseInt(objectId));
+        mhylhandler.onSaveBundle(bundle);
+
+    }
+
+
+
+
+    @JavascriptInterface
     public void mobile_login(String  username,String password){
 
         if("".equals(username.trim())||"".equals(password.trim())){
             Toast.makeText(mContext,mContext.getString(R.string.err_username_pass),Toast.LENGTH_SHORT).show();
         }else{
             HYLSharePreferences.cacheUsernamePassword(mContext,username,password);
-            new RequestNetTask(RequestType.REQUEST_TYPE_LOGIN,mhandler).execute(username, password);
+            new RequestNetTask(RequestType.REQUEST_TYPE_LOGIN,mhylhandler).execute(username, password);
         }
 
     }
@@ -80,6 +144,7 @@ public class HYLJSContext {
 
    public interface HYLJNAHandler {
         public void  onSimpleCallback(JNAResult result);
+        public void  onSaveBundle(Bundle bundle);
     }
     public class JNAResult {
         public  Boolean isSuc;
