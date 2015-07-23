@@ -6,4 +6,9 @@
     <string name="device_settings">设置</string>
     <string name="wifi_settings">WIFI配置</string>
     <string name="err_username_pass">用户名密码不能为空</string>
+    <string name="err_fisrt_login">您还没有登录</string>
+    <string name="text_using">使用中</string>
+    <string name="text_no_use">未使用</string>
+    <string name="logining">登录中</string>
+    <string name="downloading">下载中...</string>
 </resources>

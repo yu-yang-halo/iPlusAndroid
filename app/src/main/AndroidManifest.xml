@@ -10,16 +10,20 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/icon"
-        android:theme="@style/CustomActionBarTheme"
         android:label="@string/app_name"
+        android:theme="@android:style/Theme.Holo.NoActionBar"
        >
         <activity
-            android:name=".HYLMainActivity">
+            android:name=".HYLLaunchActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:theme="@style/CustomActionBarTheme"
+            android:name=".HYLMainActivity">
         </activity>
     </application>
 

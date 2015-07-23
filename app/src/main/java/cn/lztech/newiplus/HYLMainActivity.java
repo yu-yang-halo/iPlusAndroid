@@ -28,8 +28,6 @@ public class HYLMainActivity extends Activity  implements OnHYLWebHandler{
 
         getActionBar().setDisplayShowHomeEnabled(false);
 
-        HYLSharePreferences.cacheDownloadDirName(this, null);
-
 
         if (findViewById(R.id.fragment_container) != null) {
             if (savedInstanceState != null) {

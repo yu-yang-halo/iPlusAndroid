@@ -25,20 +25,39 @@ import cn.elnet.andrmb.elconnector.WSConnector;
  */
 public class HYLResourceUtils {
     public interface  HYLResourceUtilsCallback{
-        public void onFinishedDownload(boolean issuc);
+        public  void onFinishedDownload(boolean issuc);
     }
 
-    public  static void startDownloadUI(final Context ctx, final String fileName){
-        downloadUIResources(ctx, fileName, new HYLResourceUtilsCallback() {
-            @Override
-            public void onFinishedDownload(boolean issuc) {
-                if(issuc){
-                    Toast.makeText(ctx,"下载成功",Toast.LENGTH_LONG).show();
-                    HYLSharePreferences.cacheDownloadDirName(ctx,fileName);
+    public  static void startDownloadUI(final Context ctx, final String fileName,HYLResourceUtilsCallback callback){
+        if(callback==null){
+            callback=new HYLResourceUtilsCallback(){
+
+                @Override
+                public void onFinishedDownload(boolean issuc) {
+                    if(issuc){
+                        Toast.makeText(ctx,"下载成功",Toast.LENGTH_LONG).show();
+                        HYLSharePreferences.cacheDownloadDirName(ctx,fileName);
+                    }
                 }
-            }
-        });
+
+            };
+        }
+
+        downloadUIResources(ctx, fileName, callback);
     }
+
+    public static  boolean isUseCustomResource(Context ctx){
+        if(HYLSharePreferences.getDownloadDirName(ctx)!=null){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    public static void  resetToSystemResource(Context ctx){
+         HYLSharePreferences.cacheDownloadDirName(ctx,null);
+    }
+
+
     public  static  String rootPath(Context ctx){
         String dirName= HYLSharePreferences.getDownloadDirName(ctx);
         if(dirName==null){
@@ -47,6 +66,16 @@ public class HYLResourceUtils {
             return  "file:///"+ctx.getFilesDir().getPath()+"/"+dirName+"/";
         }
     }
+    public static String userCustomUIResPath(Context ctx){
+        String dirName= HYLSharePreferences.getDownloadDirName(ctx);
+        if(dirName!=null){
+            return ctx.getFilesDir().getPath()+"/"+dirName+"/ui/";
+        }else{
+            return null;
+        }
+
+    }
+
     private static void downloadUIResources(Context ctx, String fileName,HYLResourceUtilsCallback block){
         String fileURL="http://121.199.40.249/public_cloud/upload/"+fileName+".zip";
         String zipfileName=fileURL.substring(fileURL.lastIndexOf("/") + 1);

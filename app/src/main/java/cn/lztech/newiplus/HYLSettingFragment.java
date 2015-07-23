@@ -1,7 +1,9 @@
 package cn.lztech.newiplus;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -14,6 +16,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import cn.elnet.andrmb.elconnector.WSConnector;
+import cn.lztech.ProgressHUD;
+import cn.lztech.RegexUtils;
+import cn.lztech.cache.HYLResourceUtils;
+import cn.lztech.cache.HYLSharePreferences;
 
 /**
  * Created by Administrator on 2015/7/22.
@@ -26,11 +35,15 @@ public class HYLSettingFragment extends Fragment{
     Button   updateCustomResButton;
     Button   resetSystemResButton;
     TextView sysVersionTextView;
-
+    Activity mcontext;
+    ProgressHUD mProgressHUD;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.hylsettings,container,false);
-        this.getActivity().getActionBar().setTitle(this.getActivity().getString(R.string.app_settings));
+        mcontext= this.getActivity();
+
+
+        mcontext.getActionBar().setTitle(this.getActivity().getString(R.string.app_settings));
 
         serveripEdit= (EditText) view.findViewById(R.id.serverIP);
         customResStatusTextView=(TextView)view.findViewById(R.id.customresstatus);
@@ -38,25 +51,81 @@ public class HYLSettingFragment extends Fragment{
         updateCustomResButton=(Button)view.findViewById(R.id.updateCustomRes);
         resetSystemResButton=(Button)view.findViewById(R.id.resetSystemRes);
         sysVersionTextView=(TextView)view.findViewById(R.id.sysVersion);
+        serveripEdit.setText(WSConnector.getInstance().getIP1());
+
+        this.updateUsingStatusInfo();
+
+        updateCustomResButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mProgressHUD = ProgressHUD.show(mcontext, mcontext.getString(R.string.downloading), true, true, null);
+
+                final String[] usernamePasswords = HYLSharePreferences.getUsernamePassword(mcontext);
+                if (usernamePasswords != null && usernamePasswords.length == 2) {
+                    HYLResourceUtils.startDownloadUI(mcontext, usernamePasswords[0],new HYLResourceUtils.HYLResourceUtilsCallback(){
+
+                        @Override
+                        public void onFinishedDownload(boolean issuc) {
+                            mProgressHUD.dismiss();
+                            if(issuc){
+                                Toast.makeText(mcontext,"下载成功",Toast.LENGTH_LONG).show();
+                                HYLSharePreferences.cacheDownloadDirName(mcontext, usernamePasswords[0]);
+                                updateUsingStatusInfo();
+                            }
+                        }
+
+                    });
+                } else {
+                    Toast.makeText(mcontext, mcontext.getString(R.string.err_fisrt_login), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        resetSystemResButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HYLResourceUtils.resetToSystemResource(mcontext);
+                updateUsingStatusInfo();
+            }
+        });
+
+
+
+
         serveripEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                Log.e("beforeTextChanged","s :"+s+" start:"+start+" count:"+count+" after:"+after);
+                Log.e("beforeTextChanged", "s :" + s + " start:" + start + " count:" + count + " after:" + after);
 
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Log.e("onTextChanged","s :"+s+" start:"+start+" count:"+count);
+                Log.e("onTextChanged", "s :" + s + " start:" + start + " count:" + count);
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                Log.e("afterTextChanged",s.toString());
+                Log.e("afterTextChanged", s.toString());
+
+                if (RegexUtils.isIPAddress(s.toString())) {
+                    Toast.makeText(HYLSettingFragment.this.getActivity(), s.toString() + "is ip address", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
 
         return view;
     }
+    private  void  updateUsingStatusInfo(){
+        if(HYLResourceUtils.isUseCustomResource(mcontext)){
+            customResStatusTextView.setText(mcontext.getString(R.string.text_using));
+            systemResStatusTextView.setText(mcontext.getString(R.string.text_no_use));
+        }else{
+            customResStatusTextView.setText(mcontext.getString(R.string.text_no_use));
+            systemResStatusTextView.setText(mcontext.getString(R.string.text_using));
+        }
+    }
+
 }

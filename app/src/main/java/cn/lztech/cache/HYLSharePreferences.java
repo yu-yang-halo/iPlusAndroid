@@ -20,7 +20,7 @@ public class HYLSharePreferences {
     private final  static  String preference_key="cn.lztech.iPlus.share_key";
     private final  static  String userbname_key="cn.lztech.iPlus.username_key";
     private final  static  String password_key="cn.lztech.iPlus.password_key";
-    private final  static  String downloaduiresource_key="downloaduiresource_key";
+    private final  static  String downloaduiresource_key="cn.lztech.iPlus.downloaduiresource_key";
 
     public static void  cacheDownloadDirName(Context ctx,String dirName){
         SharedPreferences sharedPref = ctx.getSharedPreferences(preference_key, Context.MODE_PRIVATE);

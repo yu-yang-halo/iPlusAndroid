@@ -1,6 +1,7 @@
 package cn.lztech.jscontext;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +21,7 @@ import cn.elnet.andrmb.elconnector.ClassObject;
 import cn.elnet.andrmb.elconnector.DeviceObject;
 import cn.elnet.andrmb.elconnector.WSConnector;
 import cn.elnet.andrmb.elconnector.WSException;
+import cn.lztech.ProgressHUD;
 import cn.lztech.cache.HYLSharePreferences;
 import cn.lztech.newiplus.R;
 
@@ -223,10 +225,11 @@ public class HYLJSContext {
         public  String  jsonString;
     }
 
-    public class  RequestNetTask extends AsyncTask<String,Integer,JNAResult>{
+    public class  RequestNetTask extends AsyncTask<String,Integer,JNAResult> implements DialogInterface.OnCancelListener {
         private  RequestType requestType;
         private HYLJNAHandler _handler;
         private WSConnector wsconnector=WSConnector.getInstance();
+        ProgressHUD mProgressHUD;
         public  RequestNetTask(RequestType type,HYLJNAHandler handler) {
             requestType=type;
             _handler=handler;
@@ -255,14 +258,22 @@ public class HYLJSContext {
 
         @Override
         protected void onPostExecute(JNAResult o) {
+            mProgressHUD.dismiss();
             super.onPostExecute(o);
             _handler.onSimpleCallback(o);
+
         }
 
         @Override
         protected void onPreExecute() {
+            mProgressHUD = ProgressHUD.show(mContext,mContext.getString(R.string.logining), true,true,this);
             super.onPreExecute();
+        }
 
+        @Override
+        public void onCancel(DialogInterface dialog) {
+            this.cancel(true);
+            mProgressHUD.dismiss();
         }
     }
 }
