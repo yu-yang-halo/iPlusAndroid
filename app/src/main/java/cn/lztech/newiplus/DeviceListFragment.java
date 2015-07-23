@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
@@ -35,22 +36,38 @@ import cn.lztech.jscontext.HYLJSContext;
 /**
  * Created by Administrator on 2015/7/17.
  */
-public class DeviceDetailFragment extends Fragment {
+public class DeviceListFragment extends Fragment {
 
     SwipeRefreshLayout mSwipeLayout;
     WebView webView;
-    OnHYLWebHandler devInfoHandler;
+    OnHYLWebHandler hylhandler;
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        devInfoHandler=(OnHYLWebHandler)activity;
+        hylhandler=(OnHYLWebHandler)activity;
+    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_wificonfig, menu);
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.wifi_settings:
+                hylhandler.toWifiConfig();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,7 +79,7 @@ public class DeviceDetailFragment extends Fragment {
         mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new RefreshDeviceListTask(DeviceDetailFragment.this.getActivity(),webView,mSwipeLayout).execute((String[]) null);
+                new RefreshDeviceListTask(DeviceListFragment.this.getActivity(),webView,mSwipeLayout).execute((String[]) null);
             }
         });
         mSwipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
@@ -89,7 +106,7 @@ public class DeviceDetailFragment extends Fragment {
         setting.setJavaScriptEnabled(true);
         setting.setDefaultTextEncodingName("GBK");
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        HYLJSContext JSContext=new HYLJSContext(this.getActivity(),webView);
+        final HYLJSContext JSContext=new HYLJSContext(this.getActivity(),webView);
         JSContext.setCurrentHandler(new HYLJSContext.HYLJNAHandler() {
             @Override
             public void onSimpleCallback(HYLJSContext.JNAResult result) {
@@ -100,12 +117,16 @@ public class DeviceDetailFragment extends Fragment {
 
             @Override
             public void onSaveBundle(Bundle bundle) {
-                devInfoHandler.toDeviceInfo(bundle);
+                hylhandler.toDeviceInfo(bundle);
+            }
+            @Override
+            public void onRefreshDevice() {
+
             }
         });
         webView.addJavascriptInterface(JSContext, "jna");
 
-        new RefreshDeviceListTask(DeviceDetailFragment.this.getActivity(),webView,mSwipeLayout).execute((String[]) null);
+        new RefreshDeviceListTask(DeviceListFragment.this.getActivity(),webView,mSwipeLayout).execute((String[]) null);
 
 
 
@@ -140,7 +161,7 @@ public class DeviceDetailFragment extends Fragment {
                 Map<Integer,String> allClassIcons=new HashMap<Integer,String>();
 
                 for(DeviceObject dev : devlist){
-                    ClassObject clsObj=HYLSharePreferences.classObjectFromCache(DeviceDetailFragment.this.getActivity(), dev.getClassId());
+                    ClassObject clsObj=HYLSharePreferences.classObjectFromCache(DeviceListFragment.this.getActivity(), dev.getClassId());
 
                     allClassObjs.put(clsObj.getClassId(),clsObj.getClassFeilds());
 

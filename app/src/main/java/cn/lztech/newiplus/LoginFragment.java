@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
@@ -25,7 +26,7 @@ import cn.lztech.jscontext.HYLJSContext;
  * Created by Administrator on 2015/7/17.
  */
 public class LoginFragment extends Fragment {
-    private  OnHYLWebHandler loginHandler;
+    private  OnHYLWebHandler hylhandler;
     private  WebView webView;
     private  SwipeRefreshLayout  mSwipeLayout;
 
@@ -34,6 +35,17 @@ public class LoginFragment extends Fragment {
         inflater.inflate(R.menu.menu_hylactivity_login, menu);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.app_settings:
+                hylhandler.toAppSettings();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +57,9 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.login,container,false);
 
-        this.getActivity().getActionBar().setTitle("海易联");
+        this.getActivity().getActionBar().setTitle(this.getActivity().getString(R.string.app_title));
+        this.getActivity().setTitle("New");
+
 
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         webView=(WebView) view.findViewById(R.id.webview);
@@ -83,7 +97,6 @@ public class LoginFragment extends Fragment {
                         mSwipeLayout.setRefreshing(true);
                     }
                 }
-
             }
 
         });
@@ -95,8 +108,8 @@ public class LoginFragment extends Fragment {
                 if(result.isSuc){
 
                 }
-                if(loginHandler!=null){
-                    loginHandler.canLogin(result.isSuc);
+                if(hylhandler!=null){
+                    hylhandler.toDeviceList(result.isSuc);
                 }
 
 
@@ -104,6 +117,11 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onSaveBundle(Bundle bundle) {
+
+            }
+
+            @Override
+            public void onRefreshDevice() {
 
             }
         });
@@ -118,6 +136,6 @@ public class LoginFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        loginHandler=(OnHYLWebHandler)activity;
+        hylhandler=(OnHYLWebHandler)activity;
     }
 }

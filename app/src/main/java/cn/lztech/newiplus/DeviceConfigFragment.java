@@ -1,64 +1,32 @@
 package cn.lztech.newiplus;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.Toast;
 
 import cn.lztech.cache.HYLResourceUtils;
 import cn.lztech.jscontext.HYLJSContext;
 
 /**
- * Created by Administrator on 2015/7/20.
+ * Created by Administrator on 2015/7/22.
  */
-public class DeviceInfoFragment extends Fragment {
+public class DeviceConfigFragment extends Fragment {
     SwipeRefreshLayout mSwipeLayout;
     WebView webView;
-    OnHYLWebHandler devConfigHandler;
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        devConfigHandler=(OnHYLWebHandler)activity;
-    }
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_deviceconfig, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle presses on the action bar items
-        switch (item.getItemId()) {
-            case R.id.device_settings:
-                devConfigHandler.toDeviceConfig(this.getArguments());
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.devicedetail,container,false);
+        View view=inflater.inflate(R.layout.deviceconfig,container,false);
+        this.getActivity().getActionBar().setTitle("设置");
+
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         webView=(WebView) view.findViewById(R.id.webview);
 
@@ -74,7 +42,7 @@ public class DeviceInfoFragment extends Fragment {
                 android.R.color.holo_red_light);
         mSwipeLayout.setSize(SwipeRefreshLayout.LARGE);
 
-        String infoPath= HYLResourceUtils.rootPath(this.getActivity())+"ui/device.html";
+        String infoPath= HYLResourceUtils.rootPath(this.getActivity())+"ui/deviceConfig.html";
 
         System.out.println("infoPath " + infoPath);
 
@@ -100,7 +68,7 @@ public class DeviceInfoFragment extends Fragment {
         setting.setJavaScriptEnabled(true);
         setting.setDefaultTextEncodingName("GBK");
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        final HYLJSContext JSContext=new HYLJSContext(this.getActivity(),webView);
+        HYLJSContext JSContext=new HYLJSContext(this.getActivity(),webView);
         JSContext.needBundle=this.getArguments();
 
 
@@ -111,11 +79,10 @@ public class DeviceInfoFragment extends Fragment {
             }
             @Override
             public void onSaveBundle(Bundle bundle) {
-                DeviceInfoFragment.this.getActivity().getActionBar().setTitle(bundle.getString(HYLJSContext.key_deviceName));
             }
             @Override
             public void onRefreshDevice() {
-                JSContext.mobile_requestDeviceInfo();
+
             }
         });
         webView.addJavascriptInterface(JSContext, "jna");

@@ -31,6 +31,7 @@ public class HYLJSContext {
     public final static  String key_classId="classId_KEY";
     public final static  String key_deviceName="deviceName_KEY";
     public final static  String key_currentDeviceObjectJSON="currentDeviceObject_KEY";
+    public final static  String key_errormessageKEY="key_errormessageKEY";
     public Context mContext;
     private HYLJNAHandler mhylhandler;
     private WebView mwebView;
@@ -72,10 +73,16 @@ public class HYLJSContext {
                     String  clsJSON=gson.toJson(clsMap);
                     String  devJSON=msg.getData().getString(key_currentDeviceObjectJSON);
                     System.out.println("devJSON:"+devJSON +"\n  clsJSON:"+clsJSON);
-                    mhylhandler.onSaveBundle(msg.getData());
 
                     mwebView.loadUrl("javascript:loadDeviceInfoToHtml("+devJSON+","+clsJSON+")");
                     mhylhandler.onSaveBundle(msg.getData());
+                    break;
+                case 2:
+                    mhylhandler.onRefreshDevice();
+                    break;
+                case  10000:
+                    Toast.makeText(mContext, msg.getData().getString(key_errormessageKEY), Toast.LENGTH_SHORT).show();
+                    mhylhandler.onRefreshDevice();
                     break;
                 default:
                     break;
@@ -83,18 +90,51 @@ public class HYLJSContext {
 
         }
     };
+
+    @JavascriptInterface
+    public void mobile_updateDeviceName(final String name, final String objectId){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                DeviceObject deviceObject= null;
+                try {
+                    deviceObject = WSConnector.getInstance().getObjectValue(Integer.parseInt(objectId));
+                    deviceObject.setName(name);
+                    WSConnector.getInstance().updateObject(deviceObject);
+                } catch (WSException e) {
+                    Message msg=new Message();
+                    msg.what=10000;
+                    Bundle bundle=new Bundle();
+                    bundle.putString(key_errormessageKEY,e.getErrorMsg());
+                    msg.setData(bundle);
+                    mhander.sendMessage(msg);
+                }
+            }
+        }).start();
+    }
+
     @JavascriptInterface
     public void mobile_setFieldCmd(final String fieldValue, final String fieldId, final String objectId){
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Message msg=new Message();
                 try {
-                    WSConnector.getInstance().setFieldValue(Integer.parseInt(objectId),Integer.parseInt(fieldId),fieldValue,true);
+                    WSConnector.getInstance().setFieldValue(Integer.parseInt(objectId), Integer.parseInt(fieldId), fieldValue, true);
                     getNeedBundle().putInt(key_objectId, Integer.parseInt(objectId));
-                    mobile_requestDeviceInfo();
+                    msg.what=2;
+
+
                 } catch (WSException e) {
-                    e.printStackTrace();
+                    msg.what=10000;
+                    Bundle bundle=new Bundle();
+                    bundle.putString(key_errormessageKEY,e.getErrorMsg());
+                    msg.setData(bundle);
+
                 }
+                mhander.sendMessage(msg);
+
             }
         }).start();
 
@@ -109,25 +149,29 @@ public class HYLJSContext {
                  new Thread(){
                      @Override
                      public void run() {
+                         Message msg=new Message();
                          try {
                              deviceObject = WSConnector.getInstance().getObjectValue(objectId);
 
                              if(deviceObject!=null){
 
-                                 Message msg=new Message();
+
                                  msg.what=1;
                                  Bundle bundle=new Bundle();
                                  bundle.putInt(key_objectId,deviceObject.getObjectId());
-                                 bundle.putInt(key_classId,deviceObject.getClassId());
+                                 bundle.putInt(key_classId, deviceObject.getClassId());
                                  bundle.putString(key_currentDeviceObjectJSON, gson.toJson(deviceObject));
-                                 bundle.putString(key_deviceName,deviceObject.getName());
+                                 bundle.putString(key_deviceName, deviceObject.getName());
                                  msg.setData(bundle);
-                                 mhander.sendMessage(msg);
+
                              }
                          } catch (WSException e) {
-                             e.printStackTrace();
+                             msg.what=10000;
+                             Bundle bundle=new Bundle();
+                             bundle.putString(key_errormessageKEY,e.getErrorMsg());
+                             msg.setData(bundle);
                          }
-
+                         mhander.sendMessage(msg);
                      }
                  }.start();
              }
@@ -172,6 +216,7 @@ public class HYLJSContext {
    public interface HYLJNAHandler {
         public void  onSimpleCallback(JNAResult result);
         public void  onSaveBundle(Bundle bundle);
+        public void  onRefreshDevice();
     }
     public class JNAResult {
         public  Boolean isSuc;

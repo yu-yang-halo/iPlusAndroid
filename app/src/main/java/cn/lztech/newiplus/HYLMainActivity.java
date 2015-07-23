@@ -1,21 +1,17 @@
 package cn.lztech.newiplus;
 
+import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.view.MotionEvent;
+import android.view.VelocityTracker;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import cn.lztech.cache.HYLResourceUtils;
 import cn.lztech.cache.HYLSharePreferences;
 import cn.lztech.jscontext.HYLJSContext;
 
@@ -23,10 +19,15 @@ import cn.lztech.jscontext.HYLJSContext;
 
 public class HYLMainActivity extends Activity  implements OnHYLWebHandler{
     private  static String ACTIVITY_LOG="HYLMainActivity";
+    ActionBar mActionbar;
+    TextView tvTitle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hylactivity_login);
+
+        getActionBar().setDisplayShowHomeEnabled(false);
+
         HYLSharePreferences.cacheDownloadDirName(this, null);
 
 
@@ -40,31 +41,12 @@ public class HYLMainActivity extends Activity  implements OnHYLWebHandler{
 
         }
 
-
-        //HYLResourceUtils.startDownloadUI(this,"zjdev1");
-
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
 
-        return super.onCreateOptionsMenu(menu);
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle presses on the action bar items
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    public void canLogin(boolean iscanlogin) {
+    public void toDeviceList(boolean iscanlogin) {
         if (iscanlogin) {
-            DeviceDetailFragment detailFragment=new DeviceDetailFragment();
+            DeviceListFragment detailFragment=new DeviceListFragment();
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container,detailFragment);
             transaction.addToBackStack(null);
@@ -72,6 +54,8 @@ public class HYLMainActivity extends Activity  implements OnHYLWebHandler{
         }
     }
     public void toDeviceInfo(Bundle bundle){
+
+
         int objectId= bundle.getInt(HYLJSContext.key_objectId);
         if(objectId>0){
             DeviceInfoFragment deviceInfoFragment=new DeviceInfoFragment();
@@ -85,4 +69,36 @@ public class HYLMainActivity extends Activity  implements OnHYLWebHandler{
 
     }
 
+    @Override
+    public void toDeviceConfig(Bundle bundle) {
+        int objectId= bundle.getInt(HYLJSContext.key_objectId);
+        if(objectId>0){
+            DeviceConfigFragment deviceConfigFragment=new DeviceConfigFragment();
+            deviceConfigFragment.setArguments(bundle);
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container,deviceConfigFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+
+        }
+    }
+
+    @Override
+    public void toWifiConfig() {
+        HYLWifiConfigFragment hylWifiConfigFragment=new HYLWifiConfigFragment();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container,hylWifiConfigFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    @Override
+    public void toAppSettings() {
+        HYLSettingFragment hylSettingFragment=new HYLSettingFragment();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container,hylSettingFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+    
 }
