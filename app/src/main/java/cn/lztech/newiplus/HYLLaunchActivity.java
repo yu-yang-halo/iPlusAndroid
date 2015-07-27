@@ -18,6 +18,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import cn.lztech.cache.HYLResourceUtils;
+import cn.lztech.cache.HYLUserResourceConfig;
 
 
 /**
@@ -36,6 +37,7 @@ public class HYLLaunchActivity extends Activity {
         logoImageView.setAnimation(animation);
 
         showHYLLogo(HYLLOGO_DELAY_TIME);
+
     }
     public Handler mhandler=new Handler(){
         @Override
@@ -52,7 +54,7 @@ public class HYLLaunchActivity extends Activity {
                         bm = BitmapFactory.decodeFile(HYLResourceUtils.userCustomUIResPath(HYLLaunchActivity.this)+"img/launchLogo.png");
                     }
                     if(bm==null){
-                        logoImageView.setBackgroundResource(R.mipmap.launchlogo);
+                        logoImageView.setBackgroundResource(R.mipmap.logo);
                     }else{
                         Drawable drawable =new BitmapDrawable(null,bm);
                         logoImageView.setBackgroundDrawable(drawable);

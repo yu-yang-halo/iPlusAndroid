@@ -28,6 +28,7 @@ public class HYLResourceUtils {
         public  void onFinishedDownload(boolean issuc);
     }
 
+
     public  static void startDownloadUI(final Context ctx, final String fileName,HYLResourceUtilsCallback callback){
         if(callback==null){
             callback=new HYLResourceUtilsCallback(){
@@ -67,13 +68,19 @@ public class HYLResourceUtils {
         }
     }
     public static String userCustomUIResPath(Context ctx){
-        String dirName= HYLSharePreferences.getDownloadDirName(ctx);
-        if(dirName!=null){
-            return ctx.getFilesDir().getPath()+"/"+dirName+"/ui/";
+        if(userCustomRootPath(ctx)!=null){
+            return userCustomRootPath(ctx)+"/ui/";
         }else{
             return null;
         }
-
+    }
+    public static String userCustomRootPath(Context ctx){
+        String dirName= HYLSharePreferences.getDownloadDirName(ctx);
+        if(dirName!=null){
+            return ctx.getFilesDir().getPath()+"/"+dirName;
+        }else{
+            return null;
+        }
     }
 
     private static void downloadUIResources(Context ctx, String fileName,HYLResourceUtilsCallback block){

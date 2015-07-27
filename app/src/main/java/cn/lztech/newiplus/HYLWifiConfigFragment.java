@@ -9,10 +9,13 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.List;
+
+import cn.lztech.adapter.WifiAdapter;
 
 /**
  * Created by Administrator on 2015/7/22.
@@ -31,8 +34,21 @@ public class HYLWifiConfigFragment extends Fragment {
         openWifi();
         wifidatas = wifiManager.getScanResults();
 
-        ArrayAdapter<ScanResult> adapter=new ArrayAdapter<ScanResult>(this.getActivity(),android.R.layout.simple_expandable_list_item_1,wifidatas);
+        WifiAdapter adapter=new WifiAdapter(wifidatas,this.getActivity());
+
         listView.setAdapter(adapter);
+        listView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         return view;
     }
     /**

@@ -3,7 +3,9 @@ package cn.lztech.newiplus;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -21,6 +23,8 @@ public class HYLMainActivity extends Activity  implements OnHYLWebHandler{
     private  static String ACTIVITY_LOG="HYLMainActivity";
     ActionBar mActionbar;
     TextView tvTitle;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

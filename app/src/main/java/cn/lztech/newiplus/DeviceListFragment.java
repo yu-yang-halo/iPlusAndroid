@@ -31,6 +31,7 @@ import cn.elnet.andrmb.elconnector.WSConnector;
 import cn.elnet.andrmb.elconnector.WSException;
 import cn.lztech.cache.HYLResourceUtils;
 import cn.lztech.cache.HYLSharePreferences;
+import cn.lztech.cache.HYLUserResourceConfig;
 import cn.lztech.jscontext.HYLJSContext;
 
 /**
@@ -74,7 +75,17 @@ public class DeviceListFragment extends Fragment {
         View view=inflater.inflate(R.layout.devicedetail,container,false);
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         webView=(WebView) view.findViewById(R.id.webview);
-        this.getActivity().getActionBar().setTitle("设备列表");
+
+
+        HYLUserResourceConfig.UserConfig userConfig=HYLUserResourceConfig.loadUserConfig(this.getActivity());
+
+        if(userConfig==null){
+            this.getActivity().getActionBar().setTitle("设备列表");
+        }else{
+            this.getActivity().getActionBar().setTitle(userConfig.getTitle().getDevices());
+        }
+
+
 
         mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

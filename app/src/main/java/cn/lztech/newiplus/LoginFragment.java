@@ -2,7 +2,10 @@ package cn.lztech.newiplus;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -17,9 +20,13 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import cn.lztech.cache.HYLResourceUtils;
+import cn.lztech.cache.HYLUserResourceConfig;
 import cn.lztech.jscontext.HYLJSContext;
 
 /**
@@ -55,10 +62,27 @@ public class LoginFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.login,container,false);
+        View view=inflater.inflate(R.layout.login, container, false);
 
-        this.getActivity().getActionBar().setTitle(this.getActivity().getString(R.string.app_title));
-        this.getActivity().setTitle("New");
+
+
+        HYLUserResourceConfig.UserConfig userConfig=HYLUserResourceConfig.loadUserConfig(this.getActivity());
+
+        if(userConfig==null){
+
+            this.getActivity().getActionBar().setTitle(this.getActivity().getString(R.string.app_title));
+        }else{
+            this.getActivity().getActionBar().setTitle(userConfig.getTitle().getLogin());
+
+            this.getActivity().getActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(userConfig.getBarColor())));
+
+            int titleId = Resources.getSystem().getIdentifier(
+                    "action_bar_title", "id", "android");
+            TextView titleView = (TextView)this.getActivity().findViewById(titleId);
+            titleView.setTextSize(userConfig.getFontSize());
+            titleView.setTextColor(Color.parseColor(userConfig.getFontColor()));
+        }
+
 
 
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);

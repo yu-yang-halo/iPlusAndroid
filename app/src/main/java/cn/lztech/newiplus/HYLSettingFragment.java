@@ -4,6 +4,8 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -90,7 +92,7 @@ public class HYLSettingFragment extends Fragment{
         });
 
 
-
+        sysVersionTextView.setText(getVersion());
 
         serveripEdit.addTextChangedListener(new TextWatcher() {
             @Override
@@ -125,6 +127,21 @@ public class HYLSettingFragment extends Fragment{
         }else{
             customResStatusTextView.setText(mcontext.getString(R.string.text_no_use));
             systemResStatusTextView.setText(mcontext.getString(R.string.text_using));
+        }
+    }
+    /**
+     * 获取版本号
+     * @return 当前应用的版本号
+     */
+    public String getVersion() {
+        try {
+            PackageManager manager = mcontext.getPackageManager();
+            PackageInfo info = manager.getPackageInfo(mcontext.getPackageName(), 0);
+            String version = info.versionName;
+            return  version;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
         }
     }
 
