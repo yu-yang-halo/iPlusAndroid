@@ -1,6 +1,7 @@
 package cn.lztech.cache;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -19,15 +20,15 @@ public class HYLUserResourceConfig {
              return null;
          }
          String configName="config.json";
-         String configPath= HYLResourceUtils.userCustomRootPath(ctx)+"/"+configName;
+         String defaultConfigName="configdefault.json";
+         String configPath= HYLResourceUtils.userCustomUIResPath(ctx)+"/config/"+configName;
          Gson gson=new Gson();
          try {
              Reader reader=new FileReader(new File(configPath));
              UserConfig userConfig=gson.fromJson(reader, UserConfig.class);
-             System.out.println(userConfig.title.login);
              return userConfig;
          } catch (FileNotFoundException e) {
-             e.printStackTrace();
+             Log.e("loadUserConfig","FileNotFoundException");
          }
 
          return null;

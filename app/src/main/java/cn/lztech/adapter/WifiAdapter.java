@@ -47,7 +47,7 @@ public class WifiAdapter extends BaseAdapter {
         }
         TextView  textView=(TextView)convertView.findViewById(R.id.textView);
 
-        textView.setText(wifiList.get(position).BSSID);
+        textView.setText(wifiList.get(position).SSID);
 
 
 

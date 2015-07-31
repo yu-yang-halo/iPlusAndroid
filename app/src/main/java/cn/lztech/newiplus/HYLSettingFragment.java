@@ -111,7 +111,7 @@ public class HYLSettingFragment extends Fragment{
                 Log.e("afterTextChanged", s.toString());
 
                 if (RegexUtils.isIPAddress(s.toString())) {
-                    Toast.makeText(HYLSettingFragment.this.getActivity(), s.toString() + "is ip address", Toast.LENGTH_SHORT).show();
+                    HYLSharePreferences.cacheServerIP(getActivity(),s.toString());
                 }
 
             }

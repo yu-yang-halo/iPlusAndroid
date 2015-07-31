@@ -249,6 +249,7 @@ public class HYLJSContext {
 
                 } catch (WSException e) {
                     isSuc=false;
+                    result.jsonString=e.getErrorMsg();
                 }
                 result.isSuc=isSuc;
             }

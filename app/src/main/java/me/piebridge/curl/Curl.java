@@ -11,7 +11,7 @@
  *
  */
 
-package cn.lztech.curl;
+package me.piebridge.curl;
 
 import java.io.File;
 import java.lang.annotation.Documented;
@@ -498,14 +498,14 @@ public class Curl {
     public static final int CURLINFO_SSL_DATA_IN = 5;
     public static final int CURLINFO_SSL_DATA_OUT = 6;
     public static final String[] CURLINFO = {
-        "TEXT",
-        "HEADER_IN",
-        "HEADER_OUT",
-        "DATA_IN",
-        "DATA_OUT",
-        "SSL_DATA_IN",
-        "SSL_DATA_OUT",
-        "END",
+            "TEXT",
+            "HEADER_IN",
+            "HEADER_OUT",
+            "DATA_IN",
+            "DATA_OUT",
+            "SSL_DATA_IN",
+            "SSL_DATA_OUT",
+            "END",
     };
 
     public static final int CURLSHOPT_SHARE = 1;
@@ -523,12 +523,12 @@ public class Curl {
     public static final int CURL_LOCK_DATA_SSL_SESSION = 4;
 
     public static final String[] CURL_LOCK_DATA = {
-        "NONE",
-        "SHARE",
-        "COOKIE",
-        "DNS",
-        "SSL_SESSION",
-        "CONNECT",
+            "NONE",
+            "SHARE",
+            "COOKIE",
+            "DNS",
+            "SSL_SESSION",
+            "CONNECT",
     };
 
     public static final int CURL_LOCK_ACCESS_SHARED = 1;
@@ -536,9 +536,9 @@ public class Curl {
     public static final int CURL_LOCK_ACCESS_SINGLE = 2;
 
     public static final String[] CURL_LOCK_ACCESS = {
-        "NONE",
-        "SHARED",
-        "SINGLE",
+            "NONE",
+            "SHARED",
+            "SINGLE",
     };
 
     public static native int curl_init(); // NOSONAR
@@ -589,13 +589,13 @@ public class Curl {
             throw new NullPointerException();
         }
         switch (option) {
-        case CURLOPT_FILE:
-        case CURLOPT_INFILE:
-        case CURLOPT_WRITEHEADER:
-        case CURLOPT_STDERR:
-            return curl_setopt(curl, option, value.getAbsolutePath());
-        default:
-            throw new UnsupportedOperationException();
+            case CURLOPT_FILE:
+            case CURLOPT_INFILE:
+            case CURLOPT_WRITEHEADER:
+            case CURLOPT_STDERR:
+                return curl_setopt(curl, option, value.getAbsolutePath());
+            default:
+                throw new UnsupportedOperationException();
         }
     }
 
@@ -685,16 +685,16 @@ public class Curl {
     public static String curl_getinfo(int curl, int info) { // NOSONAR
         int type = CURLINFO_TYPEMASK & (int) info;
         switch (type) {
-        case CURLINFO_STRING:
-            return new String(curl_getinfo_bytes(curl, info));
-        case CURLINFO_LONG:
-            return String.valueOf(curl_getinfo_long(curl, info));
-        case CURLINFO_DOUBLE:
-            return String.format(Locale.US, "%.3f", curl_getinfo_double(curl, info));
-        case CURLINFO_SLIST:
-            throw new UnsupportedOperationException("cannot convert byte[][] to string");
-        default:
-            throw new UnsupportedOperationException("unsupported option");
+            case CURLINFO_STRING:
+                return new String(curl_getinfo_bytes(curl, info));
+            case CURLINFO_LONG:
+                return String.valueOf(curl_getinfo_long(curl, info));
+            case CURLINFO_DOUBLE:
+                return String.format(Locale.US, "%.3f", curl_getinfo_double(curl, info));
+            case CURLINFO_SLIST:
+                throw new UnsupportedOperationException("cannot convert byte[][] to string");
+            default:
+                throw new UnsupportedOperationException("unsupported option");
         }
     }
 

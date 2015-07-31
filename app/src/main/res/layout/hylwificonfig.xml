@@ -1,14 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/white">
 
 
-
-
-    <ListView
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/listView"
-        android:layout_weight="1" />
+        android:layout_height="50dp"
+        android:gravity="center">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="连接到WIFI设备"
+            android:id="@+id/towifiDeviceBtn" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:id="@+id/layoutSSID"
+        android:weightSum="1">
+
+
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="ssid"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:layout_weight="0.2" />
+
+        <EditText
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:id="@+id/ssidEdit"
+            android:lines="1"
+            android:singleLine="true" />
+    </LinearLayout>
+    <LinearLayout
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+        android:id="@+id/layoutPASS"
+    android:gravity="center">
+
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="密码"
+            android:gravity="center"
+            android:id="@+id/textView2"
+            android:textColor="@color/black"
+            android:layout_weight="0.2" />
+
+        <EditText
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/passEdit"
+            android:layout_weight="0.8"
+            android:lines="1"
+            android:singleLine="true"
+            android:inputType="textPassword" />
+</LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/layoutConfig"
+        android:gravity="center">
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="配置到WIFI设备"
+            android:id="@+id/configBtn" />
+    </LinearLayout>
 </LinearLayout>

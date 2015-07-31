@@ -8,6 +8,7 @@ import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -171,10 +172,11 @@ public class HYLResourceUtils {
 
 
 
-    private static void unzipdownloadfile(File innerZipfile){
+    private static void unzipdownloadfile(File innerZipfile) {
         int index=innerZipfile.getAbsolutePath().lastIndexOf(".zip");
 
         String unzipDir=innerZipfile.getAbsolutePath().substring(0,index);
+
         System.out.println("unzipDir..." + unzipDir);
         boolean isfinishUnZip=unZipFiles(innerZipfile,unzipDir);
 
@@ -183,8 +185,35 @@ public class HYLResourceUtils {
                 System.out.println(innerZipfile.getAbsolutePath() + "文件删除成功");
             }
 
+            try {
+                String srcConfigPath=unzipDir+"/config.json";
+                String dstConfigPath=unzipDir+"/ui/config/config.json";
+                String srcLogoPath=unzipDir+"/launchLogo.png";
+                String dstLogoPath=unzipDir+"/ui/img/launchLogo.png";
+                movefile(srcConfigPath,dstConfigPath);
+                movefile(srcLogoPath,dstLogoPath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
+    private static void movefile(String srcPath,String dstPath) throws IOException {
+        File srcFile=new File(srcPath);
+        File dstFile=new File(dstPath);
+
+        if(srcFile.exists()){
+            FileInputStream inputStream=new FileInputStream(srcFile);
+            FileOutputStream outputStream=new FileOutputStream(dstFile);
+            byte[] bytes=new byte[1024];
+            int reads=0;
+            while((reads=inputStream.read(bytes))!=-1){
+                outputStream.write(bytes,0,reads);
+            }
+            srcFile.delete();
+        }
+
+    }
+
     private static boolean unZipFiles(java.io.File zipfile, String descDir) {
         boolean isunzipsuccessful=false;
         try {
@@ -244,6 +273,7 @@ public class HYLResourceUtils {
                         if(file.delete()){
                             System.out.println(file.getAbsolutePath() + "文件删除成功");
                         }
+
                     }
 
                 }

@@ -69,7 +69,6 @@ public class LoginFragment extends Fragment {
         HYLUserResourceConfig.UserConfig userConfig=HYLUserResourceConfig.loadUserConfig(this.getActivity());
 
         if(userConfig==null){
-
             this.getActivity().getActionBar().setTitle(this.getActivity().getString(R.string.app_title));
         }else{
             this.getActivity().getActionBar().setTitle(userConfig.getTitle().getLogin());
@@ -129,11 +128,14 @@ public class LoginFragment extends Fragment {
         JSContext.setCurrentHandler(new HYLJSContext.HYLJNAHandler() {
             @Override
             public void onSimpleCallback(HYLJSContext.JNAResult result) {
-                if(result.isSuc){
-
-                }
-                if(hylhandler!=null){
-                    hylhandler.toDeviceList(result.isSuc);
+                if(!result.isSuc){
+                    if(result.jsonString!=null&&!result.jsonString.equals("")){
+                        Toast.makeText(getActivity(),result.jsonString,Toast.LENGTH_SHORT).show();
+                    }
+                }else{
+                    if(hylhandler!=null){
+                        hylhandler.toDeviceList(result.isSuc);
+                    }
                 }
 
 

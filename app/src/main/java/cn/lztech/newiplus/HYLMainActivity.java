@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import cn.lztech.WifiAdmin;
 import cn.lztech.cache.HYLSharePreferences;
 import cn.lztech.jscontext.HYLJSContext;
 
@@ -48,6 +49,10 @@ public class HYLMainActivity extends Activity  implements OnHYLWebHandler{
 
     public void toDeviceList(boolean iscanlogin) {
         if (iscanlogin) {
+            //缓存网络ssid
+            WifiAdmin wifiAdmin=new  WifiAdmin(this);
+            HYLSharePreferences.setWIFISSID(this,wifiAdmin.getSSID());
+
             DeviceListFragment detailFragment=new DeviceListFragment();
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container,detailFragment);

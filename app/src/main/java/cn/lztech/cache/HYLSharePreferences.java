@@ -22,6 +22,36 @@ public class HYLSharePreferences {
     private final  static  String password_key="cn.lztech.iPlus.password_key";
     private final  static  String downloaduiresource_key="cn.lztech.iPlus.downloaduiresource_key";
 
+    private final  static  String wifissid_key="cn.lztech.iPlus.wifissid_key";
+    private final  static  String server_IP_key="cn.lztech.iPlus.server_IP_key";
+
+    public static void  cacheServerIP(Context ctx,String serverIP){
+        SharedPreferences sharedPref = ctx.getSharedPreferences(preference_key, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(server_IP_key,serverIP);
+        editor.commit();
+
+        WSConnector.getInstance(serverIP,"8080",false);
+    }
+    public static  String getServerIP(Context ctx){
+        SharedPreferences sharedPreferences=ctx.getSharedPreferences(preference_key, Context.MODE_PRIVATE);
+        String serverIP=sharedPreferences.getString(server_IP_key, null);
+        return serverIP;
+    }
+
+
+    public static void  setWIFISSID(Context ctx,String ssid){
+        SharedPreferences sharedPref = ctx.getSharedPreferences(preference_key, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(wifissid_key,ssid);
+        editor.commit();
+    }
+    public static String  getWIFISSID(Context ctx){
+        SharedPreferences sharedPreferences=ctx.getSharedPreferences(preference_key, Context.MODE_PRIVATE);
+        String ssid=sharedPreferences.getString(wifissid_key, null);
+        return ssid;
+    }
+
     public static void  cacheDownloadDirName(Context ctx,String dirName){
         SharedPreferences sharedPref = ctx.getSharedPreferences(preference_key, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();

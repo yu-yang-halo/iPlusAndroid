@@ -1,6 +1,7 @@
 package cn.lztech.newiplus;
 
 import android.app.Activity;
+import android.content.ContentUris;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,8 +18,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import cn.elnet.andrmb.elconnector.WSConnector;
+import cn.lztech.WifiAdmin;
 import cn.lztech.cache.HYLResourceUtils;
+import cn.lztech.cache.HYLSharePreferences;
 import cn.lztech.cache.HYLUserResourceConfig;
+import cn.lztech.curl.CurlUtils;
 
 
 /**
@@ -37,7 +42,11 @@ public class HYLLaunchActivity extends Activity {
         logoImageView.setAnimation(animation);
 
         showHYLLogo(HYLLOGO_DELAY_TIME);
+        String serverIP= HYLSharePreferences.getServerIP(this);
 
+        if(serverIP!=null){
+            WSConnector.getInstance(serverIP,"8080",false);
+        }
     }
     public Handler mhandler=new Handler(){
         @Override
