@@ -13,4 +13,15 @@ public interface OnHYLWebHandler {
     public void toDeviceConfig(Bundle bundle);
     public void toWifiConfig();
     public void toAppSettings();
+
+
+    public void doSomethingAtCuttentPage(HYLPage currentPage,Bundle bundle);
+}
+enum HYLPage{
+    HYL_PAGE_LOGIN,
+    HYL_PAGE_DEVICE_LIST,
+    HYL_PAGE_DEVICE_INFO,
+    HYL_PAGE_DEVICE_CONFIG,
+    HYL_PAGE_WIFI_DEVICE_CONFIG,
+    HYL_PAGE_APP_SYS_CONFIG,
 }

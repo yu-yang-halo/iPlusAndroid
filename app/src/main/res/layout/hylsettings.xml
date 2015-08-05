@@ -24,6 +24,7 @@
                     android:layout_height="match_parent"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="服务器"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/titlefontSize"
                     android:gravity="center"
                     android:layout_weight="0.19"
@@ -41,14 +42,16 @@
                     android:layout_height="match_parent"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="服务器地址"
+                    android:textColor="@color/black"
                     android:gravity="center"
-                    android:layout_weight="0.19" />
+                    android:layout_weight="0.2" />
 
                 <EditText
-                    android:layout_width="wrap_content"
+                    android:layout_width="140dp"
                     android:layout_height="match_parent"
                     android:id="@+id/serverIP"
-                    android:layout_weight="0.81" />
+                    android:textColor="@color/black"
+                    android:layout_weight="0.6" />
             </LinearLayout>
             <LinearLayout
                 android:orientation="horizontal"
@@ -63,6 +66,7 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="我的资源"
                     android:textSize="@dimen/titlefontSize"
+                    android:textColor="@color/black"
                     android:gravity="center"
                     android:layout_weight="0.19"
                   />
@@ -79,6 +83,7 @@
                     android:layout_height="match_parent"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="状态"
+                    android:textColor="@color/black"
                     android:gravity="center"
                     android:layout_weight="0.19" />
 
@@ -103,10 +108,16 @@
                 android:gravity="center">
 
                 <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="200dp"
+                    android:layout_height="45dp"
                     android:text="手动更新最新资源"
-                    android:id="@+id/updateCustomRes" />
+                    style="@style/hylfontStyle"
+                    android:background="@drawable/button_alph_bg"
+                    android:textColor="@drawable/button_font_color_long"
+                    android:id="@+id/updateCustomRes"
+                    android:clickable="true"
+                    android:enabled="true"
+                    android:focusable="true" />
             </LinearLayout>
 
             <LinearLayout
@@ -121,6 +132,7 @@
                     android:layout_height="match_parent"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="系统资源"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/titlefontSize"
                     android:gravity="center"
                     android:layout_weight="0.19"
@@ -138,6 +150,7 @@
                     android:layout_height="match_parent"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="状态"
+                    android:textColor="@color/black"
                     android:gravity="center"
                     android:layout_weight="0.19" />
 
@@ -162,9 +175,12 @@
                 android:gravity="center">
 
                 <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="200dp"
+                    android:layout_height="45dp"
                     android:text="还原出厂设置"
+                    style="@style/hylfontStyle"
+                    android:background="@drawable/button_alph_bg"
+                    android:textColor="@drawable/button_font_color_long"
                     android:id="@+id/resetSystemRes" />
             </LinearLayout>
             <LinearLayout

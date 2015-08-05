@@ -1,5 +1,6 @@
 package cn.lztech.newiplus;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import cn.lztech.ProgressHUD;
 import cn.lztech.WifiAdmin;
 import cn.lztech.adapter.WifiAdapter;
 import cn.lztech.cache.HYLSharePreferences;
@@ -42,12 +44,17 @@ public class HYLWifiConfigFragment extends Fragment{
     LinearLayout configLayout;
     EditText ssidEdit;
     EditText passEdit;
-
+    OnHYLWebHandler hylhandler;
+    ProgressHUD mProgressHUD;
     Handler wifiHandler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
+            if(mProgressHUD!=null){
+                mProgressHUD.dismiss();
+            }
             switch (msg.what){
                 case 0:
+
                     Toast.makeText(HYLWifiConfigFragment.this.getActivity(),"配置失败",Toast.LENGTH_SHORT).show();
                     break;
                 case 1:
@@ -80,6 +87,7 @@ public class HYLWifiConfigFragment extends Fragment{
     @Override
     public void onStart() {
         super.onStart();
+        hylhandler.doSomethingAtCuttentPage(HYLPage.HYL_PAGE_WIFI_DEVICE_CONFIG, null);
         WifiAdmin wifiAdmin=new WifiAdmin(this.getActivity());
 
         String wifiSSID=HYLSharePreferences.getWIFISSID(this.getActivity());
@@ -95,7 +103,6 @@ public class HYLWifiConfigFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.hylwificonfig,container,false);
-        this.getActivity().getActionBar().setTitle(this.getActivity().getString(R.string.wifi_settings));
 
         Button toWifiBtn= (Button) view.findViewById(R.id.towifiDeviceBtn);
         Button configBtn= (Button) view.findViewById(R.id.configBtn);
@@ -110,6 +117,10 @@ public class HYLWifiConfigFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 if (!ssidEdit.getText().toString().trim().equals("") && !passEdit.getText().toString().trim().equals("")) {
+
+                    mProgressHUD = ProgressHUD.show(HYLWifiConfigFragment.this.getActivity(), HYLWifiConfigFragment.this.getActivity().getString(R.string.configing), true, true, null);
+
+
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -149,6 +160,12 @@ public class HYLWifiConfigFragment extends Fragment{
             configLayout.setVisibility(View.VISIBLE);
         }
 
+
+    }
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        hylhandler=(OnHYLWebHandler)activity;
 
     }
 }

@@ -36,7 +36,6 @@ public class LoginFragment extends Fragment {
     private  OnHYLWebHandler hylhandler;
     private  WebView webView;
     private  SwipeRefreshLayout  mSwipeLayout;
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_hylactivity_login, menu);
@@ -63,27 +62,6 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.login, container, false);
-
-
-
-        HYLUserResourceConfig.UserConfig userConfig=HYLUserResourceConfig.loadUserConfig(this.getActivity());
-
-        if(userConfig==null){
-            this.getActivity().getActionBar().setTitle(this.getActivity().getString(R.string.app_title));
-        }else{
-            this.getActivity().getActionBar().setTitle(userConfig.getTitle().getLogin());
-
-            this.getActivity().getActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(userConfig.getBarColor())));
-
-            int titleId = Resources.getSystem().getIdentifier(
-                    "action_bar_title", "id", "android");
-            TextView titleView = (TextView)this.getActivity().findViewById(titleId);
-            titleView.setTextSize(userConfig.getFontSize());
-            titleView.setTextColor(Color.parseColor(userConfig.getFontColor()));
-        }
-
-
-
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         webView=(WebView) view.findViewById(R.id.webview);
 
@@ -156,12 +134,16 @@ public class LoginFragment extends Fragment {
         return view;
     }
 
-
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        hylhandler.doSomethingAtCuttentPage(HYLPage.HYL_PAGE_LOGIN,null);
+    }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         hylhandler=(OnHYLWebHandler)activity;
+
     }
 }

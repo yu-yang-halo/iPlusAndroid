@@ -53,28 +53,33 @@ public class HYLLaunchActivity extends Activity {
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case 0:
-                    Intent intent = new Intent(HYLLaunchActivity.this, HYLMainActivity.class);
-                    HYLLaunchActivity.this.startActivity(intent);
-                    HYLLaunchActivity.this.finish();
+                    HYLLaunchActivity.this.toMainPage();
                     break;
                 case 1:
-                    Bitmap bm=null;
                     if(HYLResourceUtils.isUseCustomResource(HYLLaunchActivity.this)){
-                        bm = BitmapFactory.decodeFile(HYLResourceUtils.userCustomUIResPath(HYLLaunchActivity.this)+"img/launchLogo.png");
-                    }
-                    if(bm==null){
-                        logoImageView.setBackgroundResource(R.mipmap.logo);
+                        Bitmap bm= BitmapFactory.decodeFile(HYLResourceUtils.userCustomUIResPath(HYLLaunchActivity.this)+"img/launchLogo.png");
+                        if(bm==null){
+                            logoImageView.setBackgroundResource(R.mipmap.logo);
+                        }else{
+                            Drawable drawable =new BitmapDrawable(null,bm);
+                            logoImageView.setBackgroundDrawable(drawable);
+                        }
+                        showOtherLogo(OTHERLOGO_DELAY_TIME);
                     }else{
-                        Drawable drawable =new BitmapDrawable(null,bm);
-                        logoImageView.setBackgroundDrawable(drawable);
+                        HYLLaunchActivity.this.toMainPage();
                     }
-                    showOtherLogo(OTHERLOGO_DELAY_TIME);
                     break;
                 default:
                     break;
             }
         }
     };
+
+    private void toMainPage(){
+        Intent intent = new Intent(this, HYLMainActivity.class);
+        this.startActivity(intent);
+        this.finish();
+    }
 
     private  void  showOtherLogo(int delay){
         ScheduledExecutorService scheduledExecutorService= Executors.newSingleThreadScheduledExecutor();

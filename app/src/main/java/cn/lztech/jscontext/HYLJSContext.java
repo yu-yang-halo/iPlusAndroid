@@ -156,8 +156,6 @@ public class HYLJSContext {
                              deviceObject = WSConnector.getInstance().getObjectValue(objectId);
 
                              if(deviceObject!=null){
-
-
                                  msg.what=1;
                                  Bundle bundle=new Bundle();
                                  bundle.putInt(key_objectId,deviceObject.getObjectId());

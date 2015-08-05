@@ -10,5 +10,6 @@
     <string name="text_using">使用中</string>
     <string name="text_no_use">未使用</string>
     <string name="logining">登录中</string>
+    <string name="configing">配置中...</string>
     <string name="downloading">下载中...</string>
 </resources>

@@ -39,14 +39,11 @@ public class HYLSettingFragment extends Fragment{
     TextView sysVersionTextView;
     Activity mcontext;
     ProgressHUD mProgressHUD;
+    OnHYLWebHandler hylhandler;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.hylsettings,container,false);
         mcontext= this.getActivity();
-
-
-        mcontext.getActionBar().setTitle(this.getActivity().getString(R.string.app_settings));
-
         serveripEdit= (EditText) view.findViewById(R.id.serverIP);
         customResStatusTextView=(TextView)view.findViewById(R.id.customresstatus);
         systemResStatusTextView=(TextView)view.findViewById(R.id.systemresstatus);
@@ -60,10 +57,10 @@ public class HYLSettingFragment extends Fragment{
         updateCustomResButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mProgressHUD = ProgressHUD.show(mcontext, mcontext.getString(R.string.downloading), true, true, null);
 
                 final String[] usernamePasswords = HYLSharePreferences.getUsernamePassword(mcontext);
                 if (usernamePasswords != null && usernamePasswords.length == 2) {
+                    mProgressHUD = ProgressHUD.show(mcontext, mcontext.getString(R.string.downloading), true, true, null);
                     HYLResourceUtils.startDownloadUI(mcontext, usernamePasswords[0],new HYLResourceUtils.HYLResourceUtilsCallback(){
 
                         @Override
@@ -143,6 +140,19 @@ public class HYLSettingFragment extends Fragment{
             e.printStackTrace();
             return "";
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        hylhandler.doSomethingAtCuttentPage(HYLPage.HYL_PAGE_APP_SYS_CONFIG, null);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        hylhandler=(OnHYLWebHandler)activity;
+
     }
 
 }

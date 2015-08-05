@@ -27,6 +27,12 @@ public class DeviceInfoFragment extends Fragment {
     SwipeRefreshLayout mSwipeLayout;
     WebView webView;
     OnHYLWebHandler devConfigHandler;
+    Bundle deviceInfoBundle;
+    @Override
+    public void onStart() {
+        super.onStart();
+        //devConfigHandler.doSomethingAtCuttentPage(HYLPage.HYL_PAGE_DEVICE_INFO,deviceInfoBundle);
+    }
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -111,7 +117,8 @@ public class DeviceInfoFragment extends Fragment {
             }
             @Override
             public void onSaveBundle(Bundle bundle) {
-                DeviceInfoFragment.this.getActivity().getActionBar().setTitle(bundle.getString(HYLJSContext.key_deviceName));
+                deviceInfoBundle=bundle;
+                devConfigHandler.doSomethingAtCuttentPage(HYLPage.HYL_PAGE_DEVICE_INFO,deviceInfoBundle);
             }
             @Override
             public void onRefreshDevice() {

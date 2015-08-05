@@ -1,5 +1,6 @@
 package cn.lztech.newiplus;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,11 +22,23 @@ import cn.lztech.jscontext.HYLJSContext;
 public class DeviceConfigFragment extends Fragment {
     SwipeRefreshLayout mSwipeLayout;
     WebView webView;
+    Bundle dataBundle;
+    OnHYLWebHandler devConfigHandler;
+    @Override
+    public void onStart() {
+        super.onStart();
+       // devConfigHandler.doSomethingAtCuttentPage(HYLPage.HYL_PAGE_DEVICE_CONFIG,dataBundle);
+    }
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        devConfigHandler=(OnHYLWebHandler)activity;
+    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.deviceconfig,container,false);
-        this.getActivity().getActionBar().setTitle("设置");
+
 
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         webView=(WebView) view.findViewById(R.id.webview);
@@ -79,6 +92,8 @@ public class DeviceConfigFragment extends Fragment {
             }
             @Override
             public void onSaveBundle(Bundle bundle) {
+                dataBundle=bundle;
+                devConfigHandler.doSomethingAtCuttentPage(HYLPage.HYL_PAGE_DEVICE_CONFIG,dataBundle);
             }
             @Override
             public void onRefreshDevice() {

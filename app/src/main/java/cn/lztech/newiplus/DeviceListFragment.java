@@ -43,6 +43,11 @@ public class DeviceListFragment extends Fragment {
     WebView webView;
     OnHYLWebHandler hylhandler;
     @Override
+    public void onStart() {
+        super.onStart();
+        hylhandler.doSomethingAtCuttentPage(HYLPage.HYL_PAGE_DEVICE_LIST,null);
+    }
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         hylhandler=(OnHYLWebHandler)activity;
@@ -75,18 +80,6 @@ public class DeviceListFragment extends Fragment {
         View view=inflater.inflate(R.layout.devicedetail,container,false);
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         webView=(WebView) view.findViewById(R.id.webview);
-
-
-        HYLUserResourceConfig.UserConfig userConfig=HYLUserResourceConfig.loadUserConfig(this.getActivity());
-
-        if(userConfig==null){
-            this.getActivity().getActionBar().setTitle("设备列表");
-        }else{
-            this.getActivity().getActionBar().setTitle(userConfig.getTitle().getDevices());
-        }
-
-
-
         mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
