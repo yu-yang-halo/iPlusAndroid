@@ -15,6 +15,9 @@ import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import cn.lztech.cache.HYLResourceUtils;
@@ -23,7 +26,7 @@ import cn.lztech.jscontext.HYLJSContext;
 /**
  * Created by Administrator on 2015/7/20.
  */
-public class DeviceInfoFragment extends Fragment {
+public class DeviceInfoFragment extends HeaderFragment {
     SwipeRefreshLayout mSwipeLayout;
     WebView webView;
     OnHYLWebHandler devConfigHandler;
@@ -38,33 +41,37 @@ public class DeviceInfoFragment extends Fragment {
         super.onAttach(activity);
         devConfigHandler=(OnHYLWebHandler)activity;
     }
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_deviceconfig, menu);
-    }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle presses on the action bar items
-        switch (item.getItemId()) {
-            case R.id.device_settings:
-                devConfigHandler.toDeviceConfig(this.getArguments());
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+    protected void initHeaderView(View view) {
+        navigationBar= (RelativeLayout) view.findViewById(R.id.navigationBar);
+        rightBtn= (Button) view.findViewById(R.id.rightBtn);
+        leftBtn= (Button) view.findViewById(R.id.leftBtn);
+        titleText= (TextView) view.findViewById(R.id.titleText);
+        rightBtn.setText("设置");
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+        leftBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                 getActivity().onBackPressed();
+            }
+        });
+
+        rightBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(deviceInfoBundle!=null){
+                    devConfigHandler.toDeviceConfig(deviceInfoBundle);
+                }
+            }
+        });
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.devicedetail,container,false);
+        initHeaderView(view);
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         webView=(WebView) view.findViewById(R.id.webview);
 
@@ -118,7 +125,10 @@ public class DeviceInfoFragment extends Fragment {
             @Override
             public void onSaveBundle(Bundle bundle) {
                 deviceInfoBundle=bundle;
-                devConfigHandler.doSomethingAtCuttentPage(HYLPage.HYL_PAGE_DEVICE_INFO,deviceInfoBundle);
+                if(deviceInfoBundle!=null){
+                    titleText.setText(deviceInfoBundle.getString(HYLJSContext.key_deviceName));
+                }
+
             }
             @Override
             public void onRefreshDevice() {
@@ -133,4 +143,5 @@ public class DeviceInfoFragment extends Fragment {
 
         return view;
     }
+
 }

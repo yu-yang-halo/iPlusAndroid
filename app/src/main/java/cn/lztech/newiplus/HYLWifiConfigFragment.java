@@ -24,6 +24,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -38,7 +40,7 @@ import cn.lztech.curl.CurlUtils;
 /**
  * Created by Administrator on 2015/7/22.
  */
-public class HYLWifiConfigFragment extends Fragment{
+public class HYLWifiConfigFragment extends HeaderFragment{
     LinearLayout ssidLayout;
     LinearLayout passLayout;
     LinearLayout configLayout;
@@ -87,7 +89,6 @@ public class HYLWifiConfigFragment extends Fragment{
     @Override
     public void onStart() {
         super.onStart();
-        hylhandler.doSomethingAtCuttentPage(HYLPage.HYL_PAGE_WIFI_DEVICE_CONFIG, null);
         WifiAdmin wifiAdmin=new WifiAdmin(this.getActivity());
 
         String wifiSSID=HYLSharePreferences.getWIFISSID(this.getActivity());
@@ -98,12 +99,35 @@ public class HYLWifiConfigFragment extends Fragment{
             ssidEdit.setText(wifiSSID);
         }
     }
+    @Override
+    protected void initHeaderView(View view) {
+        navigationBar= (RelativeLayout) view.findViewById(R.id.navigationBar);
+        rightBtn= (Button) view.findViewById(R.id.rightBtn);
+        leftBtn= (Button) view.findViewById(R.id.leftBtn);
+        titleText= (TextView) view.findViewById(R.id.titleText);
 
+
+        leftBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
+
+        rightBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        titleText.setText(this.getString(R.string.wifi_settings));
+    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.hylwificonfig,container,false);
 
+        initHeaderView(view);
         Button toWifiBtn= (Button) view.findViewById(R.id.towifiDeviceBtn);
         Button configBtn= (Button) view.findViewById(R.id.configBtn);
         ssidEdit= (EditText) view.findViewById(R.id.ssidEdit);
@@ -140,7 +164,7 @@ public class HYLWifiConfigFragment extends Fragment{
         toWifiBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 toWifiSetting();
+                toWifiSetting();
             }
         });
         return view;
@@ -166,6 +190,7 @@ public class HYLWifiConfigFragment extends Fragment{
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         hylhandler=(OnHYLWebHandler)activity;
-
     }
+
+
 }

@@ -20,6 +20,8 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,38 +34,42 @@ import cn.lztech.jscontext.HYLJSContext;
 /**
  * Created by Administrator on 2015/7/17.
  */
-public class LoginFragment extends Fragment {
+public class LoginFragment extends HeaderFragment {
     private  OnHYLWebHandler hylhandler;
     private  WebView webView;
     private  SwipeRefreshLayout  mSwipeLayout;
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_hylactivity_login, menu);
-    }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle presses on the action bar items
-        switch (item.getItemId()) {
-            case R.id.app_settings:
+    protected void initHeaderView(View view) {
+        navigationBar= (RelativeLayout) view.findViewById(R.id.navigationBar);
+        rightBtn= (Button) view.findViewById(R.id.rightBtn);
+        leftBtn= (Button) view.findViewById(R.id.leftBtn);
+        titleText= (TextView) view.findViewById(R.id.titleText);
+
+
+        leftBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // getActivity().onBackPressed();
+            }
+        });
+
+        rightBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 hylhandler.toAppSettings();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
+            }
+        });
 
+    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.login, container, false);
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         webView=(WebView) view.findViewById(R.id.webview);
+
+        initHeaderView(view);
 
         mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -137,13 +143,21 @@ public class LoginFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        hylhandler.doSomethingAtCuttentPage(HYLPage.HYL_PAGE_LOGIN,null);
+        if(userConfig==null){
+            titleText.setText(getString(R.string.app_title));
+        }else{
+            titleText.setText(userConfig.getTitle().getLogin());
+            navigationBar.setBackgroundColor(Color.parseColor(userConfig.getBarColor()));
+            titleText.setTextSize(userConfig.getFontSize());
+            titleText.setTextColor(Color.parseColor(userConfig.getFontColor()));
+        }
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         hylhandler=(OnHYLWebHandler)activity;
-
     }
+
+
 }

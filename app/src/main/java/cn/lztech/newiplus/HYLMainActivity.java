@@ -30,51 +30,23 @@ import cn.lztech.jscontext.HYLJSContext;
 
 public class HYLMainActivity extends Activity  implements OnHYLWebHandler{
     private  static String ACTIVITY_LOG="HYLMainActivity";
-    RelativeLayout  navigationBar;
-    Button rightBtn;
-    public Button leftBtn;
-    TextView titleText;
     HYLPage currentPage;
     Bundle deviceBundle;
+    boolean buttonActiveYN=false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hylactivity_login);
-        navigationBar= (RelativeLayout) findViewById(R.id.navigationBar);
-        rightBtn= (Button) findViewById(R.id.rightBtn);
-        leftBtn= (Button) findViewById(R.id.leftBtn);
-        titleText= (TextView) findViewById(R.id.titleText);
 
-
-        leftBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-
-        rightBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(currentPage==HYLPage.HYL_PAGE_LOGIN){
-                    toAppSettings();
-                }else if(currentPage==HYLPage.HYL_PAGE_DEVICE_LIST){
-                    toWifiConfig();
-                }else if(currentPage==HYLPage.HYL_PAGE_DEVICE_INFO){
-                    if(deviceBundle!=null) {
-                        toDeviceConfig(deviceBundle);
-                    }
-                }
-            }
-        });
 
 
         if (findViewById(R.id.fragment_container) != null) {
             if (savedInstanceState != null) {
                 return;
             }
-
+            buttonActiveYN=false;
             LoginFragment firstFragment = new LoginFragment();
             firstFragment.setArguments(getIntent().getExtras());
             getFragmentManager().beginTransaction().add(R.id.fragment_container,firstFragment).commit();
@@ -89,14 +61,14 @@ public class HYLMainActivity extends Activity  implements OnHYLWebHandler{
 
     public void toDeviceList(boolean iscanlogin) {
         if (iscanlogin) {
-
+            buttonActiveYN=false;
             //缓存网络ssid
             WifiAdmin wifiAdmin=new  WifiAdmin(this);
             HYLSharePreferences.setWIFISSID(this,wifiAdmin.getSSID());
 
             DeviceListFragment detailFragment=new DeviceListFragment();
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container,detailFragment);
+            transaction.replace(R.id.fragment_container, detailFragment);
             transaction.addToBackStack(null);
             transaction.commit();
         }
@@ -105,10 +77,11 @@ public class HYLMainActivity extends Activity  implements OnHYLWebHandler{
         deviceBundle=bundle;
         int objectId= bundle.getInt(HYLJSContext.key_objectId);
         if(objectId>0){
+            buttonActiveYN=false;
             DeviceInfoFragment deviceInfoFragment=new DeviceInfoFragment();
             deviceInfoFragment.setArguments(bundle);
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container,deviceInfoFragment);
+            transaction.replace(R.id.fragment_container, deviceInfoFragment);
             transaction.addToBackStack(null);
             transaction.commit();
         }
@@ -119,10 +92,11 @@ public class HYLMainActivity extends Activity  implements OnHYLWebHandler{
     public void toDeviceConfig(Bundle bundle) {
         int objectId= bundle.getInt(HYLJSContext.key_objectId);
         if(objectId>0){
+            buttonActiveYN=false;
             DeviceConfigFragment deviceConfigFragment=new DeviceConfigFragment();
             deviceConfigFragment.setArguments(bundle);
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container,deviceConfigFragment);
+            transaction.replace(R.id.fragment_container, deviceConfigFragment);
             transaction.addToBackStack(null);
             transaction.commit();
 
@@ -131,90 +105,23 @@ public class HYLMainActivity extends Activity  implements OnHYLWebHandler{
 
     @Override
     public void toWifiConfig() {
-
+        buttonActiveYN=false;
         HYLWifiConfigFragment hylWifiConfigFragment=new HYLWifiConfigFragment();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container,hylWifiConfigFragment);
+        transaction.replace(R.id.fragment_container, hylWifiConfigFragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
 
     @Override
     public void toAppSettings() {
+        buttonActiveYN=false;
         HYLSettingFragment hylSettingFragment=new HYLSettingFragment();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container,hylSettingFragment);
+        transaction.replace(R.id.fragment_container, hylSettingFragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
 
-    @Override
-    public void doSomethingAtCuttentPage(HYLPage currentPage,Bundle deviceBundle) {
-         this.currentPage=currentPage;
-         if(this.currentPage==HYLPage.HYL_PAGE_LOGIN){
-            this.leftBtn.setVisibility(View.GONE);
-         }else{
-            this.leftBtn.setVisibility(View.VISIBLE);
-             if(this.currentPage==HYLPage.HYL_PAGE_DEVICE_CONFIG){
-                 if(deviceBundle!=null){
-                     leftBtn.setText(deviceBundle.getString(HYLJSContext.key_deviceName));
-                 }
-             }else{
-                 leftBtn.setText("返回");
-             }
-         }
-        if(this.currentPage==HYLPage.HYL_PAGE_APP_SYS_CONFIG||this.currentPage==HYLPage.HYL_PAGE_WIFI_DEVICE_CONFIG||this.currentPage==HYLPage.HYL_PAGE_DEVICE_CONFIG){
-            this.rightBtn.setVisibility(View.GONE);
-        }else{
-            this.rightBtn.setVisibility(View.VISIBLE);
-        }
-
-        if(this.currentPage==HYLPage.HYL_PAGE_LOGIN){
-            rightBtn.setBackgroundResource(R.drawable.bg_button_style1);
-            rightBtn.setText("");
-        }else{
-            rightBtn.setBackgroundResource(R.color.transparent);
-        }
-
-        HYLUserResourceConfig.UserConfig userConfig=HYLUserResourceConfig.loadUserConfig(this);
-        switch (currentPage){
-            case HYL_PAGE_APP_SYS_CONFIG:
-                titleText.setText(this.getString(R.string.app_settings));
-                break;
-            case HYL_PAGE_DEVICE_CONFIG:
-                titleText.setText("设置");
-
-                break;
-            case  HYL_PAGE_DEVICE_INFO:
-                if(deviceBundle!=null){
-                    titleText.setText(deviceBundle.getString(HYLJSContext.key_deviceName));
-                }
-                rightBtn.setText("设置");
-                break;
-            case  HYL_PAGE_DEVICE_LIST:
-                rightBtn.setText("配置");
-                if(userConfig==null){
-                    titleText.setText("设备列表");
-                }else{
-                    titleText.setText(userConfig.getTitle().getDevices());
-                }
-                break;
-            case  HYL_PAGE_LOGIN:
-
-                if(userConfig==null){
-                    titleText.setText(getString(R.string.app_title));
-                }else{
-                    titleText.setText(userConfig.getTitle().getLogin());
-                    navigationBar.setBackgroundColor(Color.parseColor(userConfig.getBarColor()));
-                    titleText.setTextSize(userConfig.getFontSize());
-                    titleText.setTextColor(Color.parseColor(userConfig.getFontColor()));
-                }
-                break;
-            case HYL_PAGE_WIFI_DEVICE_CONFIG:
-                titleText.setText(this.getString(R.string.wifi_settings));
-                break;
-        }
-
-    }
 
 }

@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +31,7 @@ import cn.lztech.cache.HYLSharePreferences;
  * Created by Administrator on 2015/7/22.
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class HYLSettingFragment extends Fragment{
+public class HYLSettingFragment extends HeaderFragment{
     EditText serveripEdit;
     TextView customResStatusTextView;
     TextView systemResStatusTextView;
@@ -41,8 +42,32 @@ public class HYLSettingFragment extends Fragment{
     ProgressHUD mProgressHUD;
     OnHYLWebHandler hylhandler;
     @Override
+    protected void initHeaderView(View view) {
+        navigationBar= (RelativeLayout) view.findViewById(R.id.navigationBar);
+        rightBtn= (Button) view.findViewById(R.id.rightBtn);
+        leftBtn= (Button) view.findViewById(R.id.leftBtn);
+        titleText= (TextView) view.findViewById(R.id.titleText);
+
+        titleText.setText(this.getString(R.string.app_settings));
+
+        leftBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                 getActivity().onBackPressed();
+            }
+        });
+
+        rightBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.hylsettings,container,false);
+        initHeaderView(view);
         mcontext= this.getActivity();
         serveripEdit= (EditText) view.findViewById(R.id.serverIP);
         customResStatusTextView=(TextView)view.findViewById(R.id.customresstatus);
@@ -145,14 +170,13 @@ public class HYLSettingFragment extends Fragment{
     @Override
     public void onStart() {
         super.onStart();
-        hylhandler.doSomethingAtCuttentPage(HYLPage.HYL_PAGE_APP_SYS_CONFIG, null);
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         hylhandler=(OnHYLWebHandler)activity;
-
     }
+
 
 }

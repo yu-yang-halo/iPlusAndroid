@@ -17,6 +17,9 @@ import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -33,11 +36,14 @@ import cn.lztech.cache.HYLResourceUtils;
 import cn.lztech.cache.HYLSharePreferences;
 import cn.lztech.cache.HYLUserResourceConfig;
 import cn.lztech.jscontext.HYLJSContext;
+import in.srain.cube.views.ptr.PtrDefaultHandler;
+import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.PtrHandler;
 
 /**
  * Created by Administrator on 2015/7/17.
  */
-public class DeviceListFragment extends Fragment {
+public class DeviceListFragment extends HeaderFragment {
 
     SwipeRefreshLayout mSwipeLayout;
     WebView webView;
@@ -45,7 +51,11 @@ public class DeviceListFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        hylhandler.doSomethingAtCuttentPage(HYLPage.HYL_PAGE_DEVICE_LIST,null);
+        if(userConfig==null){
+            titleText.setText("设备列表");
+        }else{
+            titleText.setText(userConfig.getTitle().getDevices());
+        }
     }
     @Override
     public void onAttach(Activity activity) {
@@ -53,43 +63,49 @@ public class DeviceListFragment extends Fragment {
         hylhandler=(OnHYLWebHandler)activity;
     }
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_wificonfig, menu);
-    }
+    protected void initHeaderView(View view) {
+        navigationBar= (RelativeLayout) view.findViewById(R.id.navigationBar);
+        rightBtn= (Button) view.findViewById(R.id.rightBtn);
+        leftBtn= (Button) view.findViewById(R.id.leftBtn);
+        titleText= (TextView) view.findViewById(R.id.titleText);
+        rightBtn.setText("配置");
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle presses on the action bar items
-        switch (item.getItemId()) {
-            case R.id.wifi_settings:
+        leftBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                 getActivity().onBackPressed();
+            }
+        });
+
+        rightBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 hylhandler.toWifiConfig();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+            }
+        });
     }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.devicedetail,container,false);
+        initHeaderView(view);
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
-        webView=(WebView) view.findViewById(R.id.webview);
+
         mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new RefreshDeviceListTask(DeviceListFragment.this.getActivity(),webView,mSwipeLayout).execute((String[]) null);
+                new RefreshDeviceListTask(DeviceListFragment.this.getActivity(), webView, mSwipeLayout).execute((String[]) null);
             }
         });
         mSwipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light, android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
         mSwipeLayout.setSize(SwipeRefreshLayout.LARGE);
+
+
+        webView=(WebView) view.findViewById(R.id.webview);
+
+
 
         String detailPath= HYLResourceUtils.rootPath(this.getActivity())+"ui/devices.html";
 
@@ -136,6 +152,8 @@ public class DeviceListFragment extends Fragment {
 
         return view;
     }
+
+
 
 
     class RefreshDeviceListTask extends AsyncTask<String,String,String[]>{
@@ -189,7 +207,6 @@ public class DeviceListFragment extends Fragment {
         @Override
         protected void onPostExecute(String[] s) {
             super.onPostExecute(s);
-
             mSwipeLayout.post(new Runnable() {
                 @Override
                 public void run() {
@@ -206,11 +223,11 @@ public class DeviceListFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Log.i("onPreExecute","  start..");
+            Log.i("onPreExecute", "  start..");
             mSwipeLayout.post(new Runnable() {
                 @Override
                 public void run() {
-                    if(!mSwipeLayout.isRefreshing()){
+                    if (!mSwipeLayout.isRefreshing()) {
                         mSwipeLayout.setRefreshing(true);
                     }
                 }

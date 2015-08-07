@@ -12,6 +12,9 @@ import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import cn.lztech.cache.HYLResourceUtils;
 import cn.lztech.jscontext.HYLJSContext;
@@ -19,7 +22,7 @@ import cn.lztech.jscontext.HYLJSContext;
 /**
  * Created by Administrator on 2015/7/22.
  */
-public class DeviceConfigFragment extends Fragment {
+public class DeviceConfigFragment extends HeaderFragment {
     SwipeRefreshLayout mSwipeLayout;
     WebView webView;
     Bundle dataBundle;
@@ -34,12 +37,33 @@ public class DeviceConfigFragment extends Fragment {
         super.onAttach(activity);
         devConfigHandler=(OnHYLWebHandler)activity;
     }
+    @Override
+    protected void initHeaderView(View view) {
+        navigationBar= (RelativeLayout) view.findViewById(R.id.navigationBar);
+        rightBtn= (Button) view.findViewById(R.id.rightBtn);
+        leftBtn= (Button) view.findViewById(R.id.leftBtn);
+        titleText= (TextView) view.findViewById(R.id.titleText);
+        titleText.setText("设置");
+
+        leftBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
+
+        rightBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.deviceconfig,container,false);
-
-
+        initHeaderView(view);
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         webView=(WebView) view.findViewById(R.id.webview);
 
@@ -93,7 +117,6 @@ public class DeviceConfigFragment extends Fragment {
             @Override
             public void onSaveBundle(Bundle bundle) {
                 dataBundle=bundle;
-                devConfigHandler.doSomethingAtCuttentPage(HYLPage.HYL_PAGE_DEVICE_CONFIG,dataBundle);
             }
             @Override
             public void onRefreshDevice() {
@@ -108,4 +131,6 @@ public class DeviceConfigFragment extends Fragment {
 
         return view;
     }
+
+
 }

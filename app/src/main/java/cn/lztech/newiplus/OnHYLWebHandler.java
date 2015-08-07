@@ -15,7 +15,6 @@ public interface OnHYLWebHandler {
     public void toAppSettings();
 
 
-    public void doSomethingAtCuttentPage(HYLPage currentPage,Bundle bundle);
 }
 enum HYLPage{
     HYL_PAGE_LOGIN,
