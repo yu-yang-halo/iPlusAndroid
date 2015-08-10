@@ -17,13 +17,18 @@ import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.lee.pullrefresh.ui.PullToRefreshBase;
+import com.lee.pullrefresh.ui.PullToRefreshWebView;
 
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,17 +41,11 @@ import cn.lztech.cache.HYLResourceUtils;
 import cn.lztech.cache.HYLSharePreferences;
 import cn.lztech.cache.HYLUserResourceConfig;
 import cn.lztech.jscontext.HYLJSContext;
-import in.srain.cube.views.ptr.PtrDefaultHandler;
-import in.srain.cube.views.ptr.PtrFrameLayout;
-import in.srain.cube.views.ptr.PtrHandler;
 
 /**
  * Created by Administrator on 2015/7/17.
  */
 public class DeviceListFragment extends HeaderFragment {
-
-    SwipeRefreshLayout mSwipeLayout;
-    WebView webView;
     OnHYLWebHandler hylhandler;
     @Override
     public void onStart() {
@@ -73,7 +72,7 @@ public class DeviceListFragment extends HeaderFragment {
         leftBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 getActivity().onBackPressed();
+                getActivity().onBackPressed();
             }
         });
 
@@ -84,27 +83,44 @@ public class DeviceListFragment extends HeaderFragment {
             }
         });
     }
-    @Nullable
+
+
+    private void initPullRefreshView(View view){
+        mPullWebView = (PullToRefreshWebView) view.findViewById(R.id.webview);//new PullToRefreshWebView(this);
+        webView = mPullWebView.getRefreshableView();
+
+        webView.setWebViewClient(new WebViewClient() {
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                return true;
+            }
+
+            public void onPageFinished(WebView view, String url) {
+                mPullWebView.onPullDownRefreshComplete();
+                setLastUpdateTime();
+            }
+        });
+        mPullWebView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<WebView>() {
+
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<WebView> refreshView) {
+                new RefreshDeviceListTask(DeviceListFragment.this.getActivity(), webView, mPullWebView).execute((String[]) null);
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<WebView> refreshView) {
+            }
+        });
+
+        setLastUpdateTime();
+    }
+
+@Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.devicedetail,container,false);
         initHeaderView(view);
-        mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
 
-        mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                new RefreshDeviceListTask(DeviceListFragment.this.getActivity(), webView, mSwipeLayout).execute((String[]) null);
-            }
-        });
-        mSwipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light, android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-        mSwipeLayout.setSize(SwipeRefreshLayout.LARGE);
-
-
-        webView=(WebView) view.findViewById(R.id.webview);
-
+        initPullRefreshView(view);
 
 
         String detailPath= HYLResourceUtils.rootPath(this.getActivity())+"ui/devices.html";
@@ -146,10 +162,7 @@ public class DeviceListFragment extends HeaderFragment {
         });
         webView.addJavascriptInterface(JSContext, "jna");
 
-        new RefreshDeviceListTask(DeviceListFragment.this.getActivity(),webView,mSwipeLayout).execute((String[]) null);
-
-
-
+        new RefreshDeviceListTask(DeviceListFragment.this.getActivity(),webView,mPullWebView).execute((String[]) null);
         return view;
     }
 
@@ -159,9 +172,9 @@ public class DeviceListFragment extends HeaderFragment {
     class RefreshDeviceListTask extends AsyncTask<String,String,String[]>{
         Context mcontext;
         WebView mwebview;
-        SwipeRefreshLayout mSwipeLayout;
+        PullToRefreshWebView mSwipeLayout;
 
-        RefreshDeviceListTask(Context ctx,WebView webView,SwipeRefreshLayout swipeLayout){
+        RefreshDeviceListTask(Context ctx,WebView webView,PullToRefreshWebView swipeLayout){
               this.mcontext=ctx;
               this.mwebview=webView;
               this.mSwipeLayout=swipeLayout;
@@ -210,7 +223,8 @@ public class DeviceListFragment extends HeaderFragment {
             mSwipeLayout.post(new Runnable() {
                 @Override
                 public void run() {
-                    mSwipeLayout.setRefreshing(false);
+                    mSwipeLayout.onPullDownRefreshComplete();
+                    setLastUpdateTime();
                 }
             });
 
@@ -224,16 +238,6 @@ public class DeviceListFragment extends HeaderFragment {
         protected void onPreExecute() {
             super.onPreExecute();
             Log.i("onPreExecute", "  start..");
-            mSwipeLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (!mSwipeLayout.isRefreshing()) {
-                        mSwipeLayout.setRefreshing(true);
-                    }
-                }
-            });
-
-
         }
     }
 }

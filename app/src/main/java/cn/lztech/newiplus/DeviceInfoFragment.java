@@ -15,10 +15,14 @@ import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.lee.pullrefresh.ui.PullToRefreshBase;
+import com.lee.pullrefresh.ui.PullToRefreshWebView;
 
 import cn.lztech.cache.HYLResourceUtils;
 import cn.lztech.jscontext.HYLJSContext;
@@ -27,8 +31,6 @@ import cn.lztech.jscontext.HYLJSContext;
  * Created by Administrator on 2015/7/20.
  */
 public class DeviceInfoFragment extends HeaderFragment {
-    SwipeRefreshLayout mSwipeLayout;
-    WebView webView;
     OnHYLWebHandler devConfigHandler;
     Bundle deviceInfoBundle;
     @Override
@@ -53,7 +55,7 @@ public class DeviceInfoFragment extends HeaderFragment {
         leftBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 getActivity().onBackPressed();
+                getActivity().onBackPressed();
             }
         });
 
@@ -67,25 +69,42 @@ public class DeviceInfoFragment extends HeaderFragment {
         });
     }
 
+    private void initPullRefreshView(View view){
+        mPullWebView = (PullToRefreshWebView) view.findViewById(R.id.webview);//new PullToRefreshWebView(this);
+        webView = mPullWebView.getRefreshableView();
+
+        webView.setWebViewClient(new WebViewClient() {
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                return false;
+            }
+
+            public void onPageFinished(WebView view, String url) {
+                mPullWebView.onPullDownRefreshComplete();
+                setLastUpdateTime();
+            }
+        });
+        mPullWebView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<WebView>() {
+
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<WebView> refreshView) {
+                webView.reload();
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<WebView> refreshView) {
+            }
+        });
+
+        setLastUpdateTime();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.devicedetail,container,false);
         initHeaderView(view);
-        mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
-        webView=(WebView) view.findViewById(R.id.webview);
 
-
-        mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                webView.reload();
-            }
-        });
-        mSwipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light, android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-        mSwipeLayout.setSize(SwipeRefreshLayout.LARGE);
+        initPullRefreshView(view);
 
         String infoPath= HYLResourceUtils.rootPath(this.getActivity())+"ui/device.html";
 
@@ -98,12 +117,7 @@ public class DeviceInfoFragment extends HeaderFragment {
             public void onProgressChanged(WebView view, int newProgress) {
 
                 if (newProgress == 100) {
-                    mSwipeLayout.setRefreshing(false);
-                    Log.i("progress ", "" + newProgress);
-                } else {
-                    if (!mSwipeLayout.isRefreshing()) {
-                        mSwipeLayout.setRefreshing(true);
-                    }
+                    mPullWebView.onPullDownRefreshComplete();
                 }
             }
         });
