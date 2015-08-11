@@ -32,7 +32,6 @@ public class HYLMainActivity extends Activity  implements OnHYLWebHandler{
     private  static String ACTIVITY_LOG="HYLMainActivity";
     HYLPage currentPage;
     Bundle deviceBundle;
-    boolean buttonActiveYN=false;
 
 
     @Override
@@ -46,7 +45,6 @@ public class HYLMainActivity extends Activity  implements OnHYLWebHandler{
             if (savedInstanceState != null) {
                 return;
             }
-            buttonActiveYN=false;
             LoginFragment firstFragment = new LoginFragment();
             firstFragment.setArguments(getIntent().getExtras());
             getFragmentManager().beginTransaction().add(R.id.fragment_container,firstFragment).commit();
@@ -61,7 +59,6 @@ public class HYLMainActivity extends Activity  implements OnHYLWebHandler{
 
     public void toDeviceList(boolean iscanlogin) {
         if (iscanlogin) {
-            buttonActiveYN=false;
             //缓存网络ssid
             WifiAdmin wifiAdmin=new  WifiAdmin(this);
             HYLSharePreferences.setWIFISSID(this,wifiAdmin.getSSID());
@@ -77,7 +74,6 @@ public class HYLMainActivity extends Activity  implements OnHYLWebHandler{
         deviceBundle=bundle;
         int objectId= bundle.getInt(HYLJSContext.key_objectId);
         if(objectId>0){
-            buttonActiveYN=false;
             DeviceInfoFragment deviceInfoFragment=new DeviceInfoFragment();
             deviceInfoFragment.setArguments(bundle);
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -92,7 +88,6 @@ public class HYLMainActivity extends Activity  implements OnHYLWebHandler{
     public void toDeviceConfig(Bundle bundle) {
         int objectId= bundle.getInt(HYLJSContext.key_objectId);
         if(objectId>0){
-            buttonActiveYN=false;
             DeviceConfigFragment deviceConfigFragment=new DeviceConfigFragment();
             deviceConfigFragment.setArguments(bundle);
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -105,7 +100,6 @@ public class HYLMainActivity extends Activity  implements OnHYLWebHandler{
 
     @Override
     public void toWifiConfig() {
-        buttonActiveYN=false;
         HYLWifiConfigFragment hylWifiConfigFragment=new HYLWifiConfigFragment();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, hylWifiConfigFragment);
@@ -115,7 +109,6 @@ public class HYLMainActivity extends Activity  implements OnHYLWebHandler{
 
     @Override
     public void toAppSettings() {
-        buttonActiveYN=false;
         HYLSettingFragment hylSettingFragment=new HYLSettingFragment();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, hylSettingFragment);
