@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.Objects;
 
 import cn.elnet.andrmb.elconnector.ClassField;
 import cn.elnet.andrmb.elconnector.ClassObject;
@@ -18,6 +19,8 @@ import cn.elnet.andrmb.elconnector.WSException;
  */
 public class HYLSharePreferences {
     private final  static  String preference_key="cn.lztech.iPlus.share_key";
+    private final  static  String class_cache_key="cn.lztech.iPlus.class_cache_key";
+
     private final  static  String userbname_key="cn.lztech.iPlus.username_key";
     private final  static  String password_key="cn.lztech.iPlus.password_key";
     private final  static  String downloaduiresource_key="cn.lztech.iPlus.downloaduiresource_key";
@@ -81,8 +84,33 @@ public class HYLSharePreferences {
             return new String[]{username,password};
         }
     }
-    public static ClassObject classObjectFromCache(Context ctx,Integer classId){
-        SharedPreferences sharedPreferences=ctx.getSharedPreferences(preference_key,Context.MODE_PRIVATE);
+    private static void loadFieldDisableYN(HYLUserResourceConfig.HYLFieldList  hylFieldList,ClassObject clsObj){
+      if(hylFieldList==null){
+          return;
+      }
+      for (int i=0;i<clsObj.getClassFeilds().size();i++){
+
+          for (HYLUserResourceConfig.HYLField  hylField :hylFieldList.getFileList()){
+
+              if(((ClassField)clsObj.getClassFeilds().get(i)).getFieldId()==hylField.getFieldId()){
+                  ((ClassField)clsObj.getClassFeilds().get(i)).setDisableYN(hylField.getDisableYN()==0);
+              }
+
+          }
+
+      }
+
+    }
+
+    public static void clearCache(Context ctx){
+        SharedPreferences sharedPreferences=ctx.getSharedPreferences(class_cache_key,Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+        editor.clear();
+        editor.commit();
+    }
+
+    public static ClassObject classObjectFromCache(Context ctx,Integer classId,HYLUserResourceConfig.HYLFieldList  hylFieldList){
+        SharedPreferences sharedPreferences=ctx.getSharedPreferences(class_cache_key,Context.MODE_PRIVATE);
         String  clsJSON=sharedPreferences.getString(classId.toString(), null);
         ClassObject clsobj=null;
         Gson gson=new Gson();
@@ -91,7 +119,9 @@ public class HYLSharePreferences {
         if(clsJSON==null){
             try {
                 clsobj = WSConnector.getInstance().getClass(classId);
+
                 if(clsobj!=null) {
+                    loadFieldDisableYN(hylFieldList,clsobj);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
 
                     editor.putString(classId.toString(), gson.toJson(clsobj,clstype));

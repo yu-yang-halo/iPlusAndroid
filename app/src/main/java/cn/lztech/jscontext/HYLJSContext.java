@@ -23,6 +23,7 @@ import cn.elnet.andrmb.elconnector.WSConnector;
 import cn.elnet.andrmb.elconnector.WSException;
 import cn.lztech.ProgressHUD;
 import cn.lztech.cache.HYLSharePreferences;
+import cn.lztech.cache.HYLUserResourceConfig;
 import cn.lztech.newiplus.R;
 
 /**
@@ -69,7 +70,8 @@ public class HYLJSContext {
 
                     break;
                 case 1:
-                    ClassObject clsobj= HYLSharePreferences.classObjectFromCache(mContext, msg.getData().getInt(key_classId));
+                    HYLUserResourceConfig.HYLFieldList hylFieldList=HYLUserResourceConfig.loadFieldsConfig(mContext);
+                    ClassObject clsobj= HYLSharePreferences.classObjectFromCache(mContext, msg.getData().getInt(key_classId),hylFieldList);
                     Map<Integer,List<ClassField>> clsMap=new HashMap<Integer,List<ClassField>>();
                     clsMap.put(clsobj.getClassId(),clsobj.getClassFeilds());
                     String  clsJSON=gson.toJson(clsMap);

@@ -24,6 +24,7 @@ public abstract class HeaderFragment extends Fragment {
    protected  Button leftBtn;
    protected  TextView titleText;
     HYLUserResourceConfig.UserConfig userConfig;
+    HYLUserResourceConfig.HYLFieldList hylFieldList;
 
 
     protected WebView webView;
@@ -52,7 +53,10 @@ public abstract class HeaderFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
         userConfig=HYLUserResourceConfig.loadUserConfig(getActivity());
+        hylFieldList=HYLUserResourceConfig.loadFieldsConfig(getActivity());
+
     }
 
     protected abstract void initHeaderView(View view);

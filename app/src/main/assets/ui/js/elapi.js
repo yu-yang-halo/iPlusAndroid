@@ -152,7 +152,7 @@ function hyl_loadDevicesData(devices,classTable,classIcon){
                 var key=field.fieldId;
                 var isExist=fieldIsExistInFieldMap(field,fieldValues);
                 if(isExist){
-                    if(field.deviceCmdYN==1&&field.deviceStateYN==1){
+                    if(field.deviceCmdYN==1&&field.deviceStateYN==1&&field.disableYN==0){
                         var pngString;
                         if(fieldValues[key]==0){
                             pngString="img/bg_switch_off.png";

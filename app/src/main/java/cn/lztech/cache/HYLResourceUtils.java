@@ -85,7 +85,7 @@ public class HYLResourceUtils {
     }
 
     private static void downloadUIResources(Context ctx, String fileName,HYLResourceUtilsCallback block){
-        String fileURL="http://121.199.40.249/public_cloud/upload/"+fileName+".zip";
+        String fileURL="http://"+WSConnector.getInstance().getIP1()+"/public_cloud/upload/"+fileName+".zip";
         String zipfileName=fileURL.substring(fileURL.lastIndexOf("/") + 1);
         File saveToFile=new File(ctx.getFilesDir(),zipfileName);
         UIDownloadTask newTask= new UIDownloadTask(fileURL,saveToFile,ctx);
@@ -188,9 +188,14 @@ public class HYLResourceUtils {
             try {
                 String srcConfigPath=unzipDir+"/config.json";
                 String dstConfigPath=unzipDir+"/ui/config/config.json";
+
+                String srcFieldPath=unzipDir+"/field.json";
+                String dstFieldPath=unzipDir+"/ui/config/field.json";
+
                 String srcLogoPath=unzipDir+"/launchLogo.png";
                 String dstLogoPath=unzipDir+"/ui/img/launchLogo.png";
                 movefile(srcConfigPath,dstConfigPath);
+                movefile(srcFieldPath,dstFieldPath);
                 movefile(srcLogoPath,dstLogoPath);
             } catch (IOException e) {
                 e.printStackTrace();

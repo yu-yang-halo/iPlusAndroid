@@ -196,7 +196,9 @@ public class DeviceListFragment extends HeaderFragment {
                 Map<Integer,String> allClassIcons=new HashMap<Integer,String>();
 
                 for(DeviceObject dev : devlist){
-                    ClassObject clsObj=HYLSharePreferences.classObjectFromCache(DeviceListFragment.this.getActivity(), dev.getClassId());
+                    ClassObject clsObj=HYLSharePreferences.classObjectFromCache(DeviceListFragment.this.getActivity(), dev.getClassId(),hylFieldList);
+
+
 
                     allClassObjs.put(clsObj.getClassId(),clsObj.getClassFeilds());
 

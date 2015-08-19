@@ -28,6 +28,7 @@ import android.widget.Toast;
 import org.w3c.dom.Text;
 
 import cn.lztech.cache.HYLResourceUtils;
+import cn.lztech.cache.HYLSharePreferences;
 import cn.lztech.cache.HYLUserResourceConfig;
 import cn.lztech.jscontext.HYLJSContext;
 
@@ -151,6 +152,7 @@ public class LoginFragment extends HeaderFragment {
             titleText.setTextSize(userConfig.getFontSize());
             titleText.setTextColor(Color.parseColor(userConfig.getFontColor()));
         }
+        HYLSharePreferences.clearCache(getActivity());
     }
 
     @Override

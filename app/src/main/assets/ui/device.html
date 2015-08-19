@@ -64,7 +64,11 @@
                                   }else{
                                       defaultVal=field.defaultValue;
                                   }
-                                  
+
+                                  if(field.disableYN){
+                                     continue;
+                                  }
+
                                   switch(field.widget){
                                        case 1://是按钮，发送命令，不表状态
                                     

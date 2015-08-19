@@ -4,11 +4,13 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
+import java.util.List;
 
 /**
  * Created by Administrator on 2015/7/27.
@@ -33,7 +35,59 @@ public class HYLUserResourceConfig {
 
          return null;
      }
+    //{"fileList":[{"fieldId":261,"disableYN":1},{"fieldId":348,"disableYN":1},{"fieldId":347,"disableYN":1}]}
+    public  static  HYLFieldList loadFieldsConfig(Context ctx){
+        if(!HYLResourceUtils.isUseCustomResource(ctx)){
+            return null;
+        }
+        String fieldNameFile="field.json";
+        String configPath= HYLResourceUtils.userCustomUIResPath(ctx)+"/config/"+fieldNameFile;
+        Gson gson=new Gson();
+        try {
+            Reader reader=new FileReader(new File(configPath));
+            java.lang.reflect.Type type = new TypeToken<HYLFieldList>() {}.getType();
+            HYLFieldList fieldConfig=gson.fromJson(reader, type);
 
+            return fieldConfig;
+        } catch (FileNotFoundException e) {
+            Log.e("field.json","FileNotFoundException");
+        }
+
+        return null;
+    }
+
+
+    public class HYLFieldList{
+        private List<HYLField> fileList;
+
+        public List<HYLField> getFileList() {
+            return fileList;
+        }
+
+        public void setFileList(List<HYLField> fileList) {
+            this.fileList = fileList;
+        }
+    }
+    public class HYLField{
+        private int fieldId;
+        private short disableYN;
+
+        public int getFieldId() {
+            return fieldId;
+        }
+
+        public short getDisableYN() {
+            return disableYN;
+        }
+
+        public void setDisableYN(short disableYN) {
+            this.disableYN = disableYN;
+        }
+
+        public void setFieldId(int fieldId) {
+            this.fieldId = fieldId;
+        }
+    }
 
 
     public class UserConfig{
