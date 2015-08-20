@@ -36,6 +36,7 @@ import cn.lztech.WifiAdmin;
 import cn.lztech.adapter.WifiAdapter;
 import cn.lztech.cache.HYLSharePreferences;
 import cn.lztech.curl.CurlUtils;
+import cn.lztech.esptouch.EsptouchUtils;
 
 /**
  * Created by Administrator on 2015/7/22.
@@ -98,6 +99,17 @@ public class HYLWifiConfigFragment extends HeaderFragment{
             setLayoutHidden(false);
             ssidEdit.setText(wifiSSID);
         }
+
+        /*
+        //ESPTouch简化配置
+
+
+        SimpleWifiAdmin simpleWifiAdmin=new SimpleWifiAdmin(getActivity());
+        String wifiSSID=simpleWifiAdmin.getWifiConnectedSsid();
+        setLayoutHidden(false);
+        ssidEdit.setText(wifiSSID);
+        */
+
     }
     @Override
     protected void initHeaderView(View view) {
@@ -154,6 +166,11 @@ public class HYLWifiConfigFragment extends HeaderFragment{
                             wifiHandler.sendMessage(msg);
                         }
                     }).start();
+
+                    /*
+                    ESPTouch简化WIFI配置
+                    //EsptouchUtils.configWifiSSIDWithPass(getActivity(),ssidEdit.getText().toString(),passEdit.getText().toString());
+                    */
 
                 } else {
                     Toast.makeText(HYLWifiConfigFragment.this.getActivity(), "WIFI名称密码不能为空", Toast.LENGTH_SHORT).show();
