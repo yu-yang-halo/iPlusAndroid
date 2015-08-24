@@ -47,6 +47,7 @@ import cn.lztech.jscontext.HYLJSContext;
  */
 public class DeviceListFragment extends HeaderFragment {
     OnHYLWebHandler hylhandler;
+    Button managerBtn;
     @Override
     public void onStart() {
         super.onStart();
@@ -118,6 +119,16 @@ public class DeviceListFragment extends HeaderFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.devicedetail,container,false);
+
+        managerBtn=(Button)view.findViewById(R.id.managerBtn);
+
+        managerBtn.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            hylhandler.toManagerDevice();
+        }
+        });
+
         initHeaderView(view);
 
         initPullRefreshView(view);

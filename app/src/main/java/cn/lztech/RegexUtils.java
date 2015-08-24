@@ -21,4 +21,13 @@ public class RegexUtils {
         return mat.matches();
 
     }
+    public static boolean isEamil(String email){
+        /**
+         * 判断是否是邮箱
+         */
+        String rexp="^[a-z0-9]+([._\\\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$";
+        Pattern pattern = Pattern.compile(rexp);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
 }

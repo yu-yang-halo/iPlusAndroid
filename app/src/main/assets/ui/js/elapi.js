@@ -152,7 +152,7 @@ function hyl_loadDevicesData(devices,classTable,classIcon){
                 var key=field.fieldId;
                 var isExist=fieldIsExistInFieldMap(field,fieldValues);
                 if(isExist){
-                    if(field.deviceCmdYN==1&&field.deviceStateYN==1&&field.disableYN==0){
+                    if(field.deviceCmdYN==1&&field.deviceStateYN==1){
                         var pngString;
                         if(fieldValues[key]==0){
                             pngString="img/bg_switch_off.png";
@@ -258,6 +258,13 @@ function hyl_requestDeviceInfo(){
      }else{
           mobile_requestDeviceInfo();
      }
+}
+function hyl_register(username,password,repassword,email,telephone,realname){
+       if(browser.versions.android){
+            window.jna.mobile_registerUserInfo(username,password,repassword,email,telephone,realname);
+        }else{
+            mobile_registerUserInfo(username,password,repassword,email,telephone,realname);
+        }
 }
 
 

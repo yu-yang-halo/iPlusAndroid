@@ -13,6 +13,8 @@ public interface OnHYLWebHandler {
     public void toDeviceConfig(Bundle bundle);
     public void toWifiConfig();
     public void toAppSettings();
+    public void toRegister();
+    public void toManagerDevice();
 
 
 }

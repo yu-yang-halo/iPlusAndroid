@@ -10,9 +10,6 @@
             <link rel="stylesheet" href="css/deviceConfig.css" type="text/css" charset="utf-8"/>
             <link rel="stylesheet" href="config/config.css" type="text/css" charset="utf-8"/>
             <title></title>
-            <style type="text/css">
-                
-                </style>
             </head>
     <body>
         
@@ -56,7 +53,7 @@
             }else{
                 defaultVal=field.defaultValue;
             }
-            if(field.widget==3&&(!field.disableYN)){
+            if(field.widget==3){
                 configHtml+="<div class='configRow'><label>"+field.displayName
                 +"</label><input value='"+defaultVal+"' fieldId="+key+"></input> </div>";
 

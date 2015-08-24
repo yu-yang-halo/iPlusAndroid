@@ -6,27 +6,165 @@
 }
 body{
 }
+select{
+  height:30px;
+  width:120px;
+}
 .appTheme{
     width:100%;
     height:100%;
-    
 }
 label{
     color:#ffffff;
     font-size:15px;
 }
-span{
-    display:table-cell;
-    vertical-align:middle;
-}
 .addPage{
     width:100%;
-    height:100px;
-    background-color:#008811;
-    display:table;
-    text-align:center;
+    height:100%;
+    position:absolute;
+    left:0;
+    top:0;
+
+}
+.desCls{
+	width: 185px;
+	height: 50px;
+}
+.eidtcls{
+	width: 180px;
+	height: 30px;
+	background-repeat:no-repeat;
+    background-color: transparent;
+    padding-left: 12px;
+    border:none;
+    background-image: url(../img/icon_input.png);
+    font-size:14px;
+    background-size:100%;
+}
+
+.group{
+  text-align:center;
+  margin-top: 5px;
+}
+.group .titleCls{
+	
+}
+.group div{
+	
+}
+.titleCls{
+	font:bold 15px/30px arial,sans-serif;
+}
+
+#btn_save{
+	height: 30px;
+	width: 120px;
 }
 .deletePage{
     width:100%;
     height:100%;
+    left:0;
+    top:0;
+        display: none;
 }
+
+
+#deleteTable{
+	width: 100%;
+	height: 100%;
+	border-collapse: collapse;
+}
+#deleteTable tr{
+	height: 60px;
+	border-bottom-color: #7DB72F;
+}
+#deleteTable td{
+	font: "微软雅黑";
+	font-size:18px;
+}
+#deleteTable td .icon{
+	width: 50px;
+	height: 50px;
+	vertical-align:middle;
+	font-size:25px;
+}
+#deleteTable td img{
+	width: 50px;
+	height: 50px;
+	vertical-align:middle;
+}
+#deleteTable td div{
+    height:100%;
+    width:100%;
+}
+
+#deleteTable td div .name{
+  width:100%;
+  position: relative;
+  top: 0px;
+  left: 0px;
+  float: left;
+}
+#deleteTable td div .onlineImg{
+	position:relative;
+	top:16px;
+	left:0px;
+	float:left;
+	width: 15px;
+	height: 15px;
+	
+}
+#deleteTable td div .onlineText{
+	position:relative;
+	top: 18px;
+	left: 0px;
+	float:left;
+	font-size: 10px;
+}
+#deleteTable tr .command{
+	width: 60px;
+}
+#deleteTable tr td .deleteBtn{
+	height: 50px;
+	width: 50px;
+	float: right;
+	right: 5px;
+}
+
+.on{
+	background-color:#DCDCDC;
+}
+
+ a.deleteBtn {
+        position: relative;
+        color: rgba(255,255,255,1);
+        text-decoration: none;
+        background-color: rgba(219,60,5,1);
+        font-family: 'Yanone Kaffeesatz';
+        font-size: 14px;
+        display: block;
+        padding: 0px;
+        -webkit-border-radius: 8px;
+        -moz-border-radius: 8px;
+        border-radius: 8px;
+        -webkit-box-shadow: 0px 4px 0px rgba(219,90,5,1), 0px 4px 20px rgba(0,0,0,.7);
+        -moz-box-shadow: 0px 4px 0px rgba(219,90,5,1), 0px 4px 20px rgba(0,0,0,.7);
+        box-shadow: 0px 4px 0px rgba(219,90,5,1), 0px 4px 20px rgba(0,0,0,.7);
+        text-align: center;
+        vertical-align: middle;
+        line-height: 50px;
+        -webkit-transition: all .1s ease;
+        -moz-transition: all .1s ease;
+        -ms-transition: all .1s ease;
+        -o-transition: all .1s ease;
+        transition: all .1s ease;
+    }
+
+    a.deleteBtn:active {
+        -webkit-box-shadow: 0px 3px 0px rgba(219,60,5,1), 0px 3px 6px rgba(0,0,0,.9);
+        -moz-box-shadow: 0px 3px 0px rgba(219,60,5,1), 0px 3px 6px rgba(0,0,0,.9);
+        box-shadow: 0px 3px 0px rgba(219,60,5,1), 0px 3px 6px rgba(0,0,0,.9);
+        position: relative;
+        top: 0px;
+    }
+

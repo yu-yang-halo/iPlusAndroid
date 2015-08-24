@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		    <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width,maximum-scale=1,user-scalable=no"/>
+            <script type="text/javascript" src="js/elapi.js" ></script>
+            <script type="text/javascript" src="js/jquery-2.1.0.js" ></script>
+            <title>用户注册</title>
+            <link rel="stylesheet" href="css/button.css" type="text/css" charset="utf-8"/>
+            <link rel="stylesheet" href="css/register.css" type="text/css" charset="utf-8"/>
+            <link rel="stylesheet" href="config/config.css" type="text/css" charset="utf-8"/>
+            <title></title>
+	</head>
+	<body>
+		<div class='appTheme'>
+			<center>
+		     <div class="rowcls">
+		     	<label><font color="red">*</font>用户名</label>
+		     	<input type="text" class="valueCls" id="username"/>
+		     </div>
+		      <div class="rowcls">
+		     	<label><font color="red">*</font>密码</label>
+		     	<input  class="valueCls" type="password"  id="password"/>
+		     </div>
+		      <div class="rowcls">
+		     	<label><font color="red">*</font>重复密码</label>
+		     	<input  type="password" class="valueCls" id="repassword"/>
+		     </div>
+		      <div class="rowcls">
+		     	<label><font color="red">*</font>邮箱</label>
+		     	<input type="text" class="valueCls" id="email"/>
+		     </div>
+		      <div class="rowcls">
+		     	<label>手机</label>
+		     	<input type="text" class="valueCls" id="telephone"/>
+		     </div>
+		     <div class="rowcls">
+		     	<label>真实姓名</label>
+		     	<input type="text" class="valueCls" id="realname"/>
+		     </div>
+		     <div class="rowcls">
+		     	<button class="button blue" onclick="hyl_register($('#username').val(),$('#password').val(),$('#repassword').val(),$('#email').val(),$('#telephone').val(),$('#realname').val())">注册</button>
+		     </div>
+			</center>
+		</div>
+	</body>
+
+</html>

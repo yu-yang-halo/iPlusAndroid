@@ -16,15 +16,136 @@
         <div class='appTheme'>
             
         <div class='addPage'>
-            <span><label>正在开发中...<label><span>
+            <div class='group'>
+                 <label class='titleCls'>设备来源</label>
+                 <div>
+                 	<input type="radio" name="deviceType" checked="true">自制设备</input>
+                    <input type="radio" name="deviceType" >E联设备</input>
+                 </div>
+            </div>
+            <div class='group'>
+                 <label class='titleCls'>设备的SN号</label>
+                 <div>
+                 	<select>
+                 		<option>BFF00190000</option>
+                 		<option>BFF00190001</option>
+                 		<option>BFF00190002</option>
+                 		<option>BFF00190003</option>
+                 	</select>
+                 </div>
+            </div>
+            <div class='group'>
+                 <label class='titleCls'>设备通讯方式</label>
+                 <div>
+                 	<input type="radio" name="connectType" checked="true">HTTP</input>
+                    <input type="radio" name="connectType" value="0">TCP/UDP</input>
+                 </div>
+            </div>
+            <div class='group'>
+                 <label class='titleCls'>设备数据类型</label>
+                 <div>
+                 	<input type="radio" name="dataType" checked="true" >我的创建类型</input>
+                    <input type="radio" name="dataType">公共类型</input>
+                 </div>
+                 	<select>
+                 		<option>网关</option>
+                 		<option></option>
+                 		<option></option>
+                 		<option></option>
+                 	</select>
+            </div>
+             <div class='group'>
+                 <label class='titleCls'>设备名称</label>
+                 <div>
+                 	<input  class="eidtcls" />
+                 </div>
+                 
+            </div>
+             <div class='group'>
+                 <label class='titleCls'>设备描述</label>
+                 <div>
+                 	<textarea class="desCls"></textarea>
+                 </div>
+                 
+            </div>
+            <div style="text-align: center; margin-top: 5px;" >
+                <button class="button blue" id="btn_save">保存</button>
+            </div>
         </div>
         
         <div class='deletePage'>
-            
+            	<table id="deleteTable" >
+			         <tr>
+			         	<td class="content"><img class='icon' ></img></td>
+			         	<td class='content'>
+			         		<div>
+			         			<label class='name'>DeviceNAME</label>
+                                <img class='onlineImg' src='img/icon_online.png'></img>
+                                <label class='onlineText'>在线</label>
+                                
+                            </div>
+			         	</td>
+			         	<td class='command'>
+			         		<a href="javascript:void(0);" class="deleteBtn">删除</a>
+			         	</td>
+			         </tr>
+			         <tr>
+			         	<td class="content"><img class='icon' ></img></td>
+			         	<td class='content'>
+			         		<div>
+			         			<label class='name'>DeviceNAME</label>
+                                <img class='onlineImg' src='img/icon_online.png'></img>
+                                <label class='onlineText'>在线</label>
+                                
+                            </div>
+			         	</td>
+			         	<td class='command'>
+			         		<a href="javascript:void(0);" class="deleteBtn">删除</a>
+			         	</td>
+			         </tr>
+			         <tr>
+			         	<td class="content"><img class='icon' ></img></td>
+			         	<td class='content'>
+			         		<div>
+			         			<label class='name'>DeviceNAME</label>
+                                <img class='onlineImg' src='img/icon_online.png'></img>
+                                <label class='onlineText'>在线</label>
+                                
+                            </div>
+			         	</td>
+			         	<td class='command'>
+			         		<a href="javascript:void(0);" class="deleteBtn">删除</a>
+			         	</td>
+			         </tr>
+			         <tr>
+			         	<td class="content"><img class='icon' ></img></td>
+			         	<td class='content'>
+			         		<div>
+			         			<label class='name'>DeviceNAME</label>
+                                <img class='onlineImg' src='img/icon_online.png'></img>
+                                <label class='onlineText'>在线</label>
+                            </div>
+			         	</td>
+			         	<td class='command'>
+			         		<a href="javascript:void(0);" class="deleteBtn">删除</a>
+			         	</td>
+			         </tr>
+		        </table>
         </div>
         
         
         </div>
     
     </body>
+    <script type="text/javascript">
+           function hyl_switchPage(currentPage){
+                if(currentPage==0){
+                   $(".addPage").show();
+                   $(".deletePage").hide();
+                }else{
+                   $(".addPage").hide();
+                   $(".deletePage").show();
+                }
+           }
+    </script>
 </html>

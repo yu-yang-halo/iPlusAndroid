@@ -1,0 +1,29 @@
+.appTheme{
+   padding-top:60px;
+}
+.rowcls label{
+    width:80px;
+	text-align: right;
+	display:inline-block;
+}
+.rowcls input{
+	width: 160px;
+	height: 30px;
+	background-repeat:no-repeat;
+    background-color: transparent;
+    padding-left: 12px;
+    border:none;
+    background-image: url(../img/icon_input.png);
+    font-size:14px;
+    background-size:100%;
+}
+.rowcls button{
+	margin-top: 5px;
+	width: 120px;
+	height: 35px;
+}
+.rowcls{
+	text-align: center;
+	margin-top: 4px;
+}
+

@@ -123,5 +123,24 @@ public class HYLMainActivity extends Activity  implements OnHYLWebHandler{
         transaction.commit();
     }
 
+    @Override
+    public void toRegister() {
+        HYLRegisterFragment hylRegisterFragment=new HYLRegisterFragment();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, hylRegisterFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    @Override
+    public void toManagerDevice() {
+
+        HYLManagerFragment hylManagerFragment=new HYLManagerFragment();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, hylManagerFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
 
 }

@@ -2,6 +2,7 @@ package cn.lztech.newiplus;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -39,6 +40,7 @@ public class LoginFragment extends HeaderFragment {
     private  OnHYLWebHandler hylhandler;
     private  WebView webView;
     private  SwipeRefreshLayout  mSwipeLayout;
+    private  Button regBtn;
 
     @Override
     protected void initHeaderView(View view) {
@@ -69,6 +71,14 @@ public class LoginFragment extends HeaderFragment {
         View view=inflater.inflate(R.layout.login, container, false);
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         webView=(WebView) view.findViewById(R.id.webview);
+        regBtn=(Button)view.findViewById(R.id.regBtn);
+
+        regBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               hylhandler.toRegister();
+            }
+        });
 
         initHeaderView(view);
 

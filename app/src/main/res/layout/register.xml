@@ -39,35 +39,25 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" />
 
-        <Button
-            android:textSize="18sp"
-            android:layout_width="65dp"
-            android:layout_height="match_parent"
-            android:id="@+id/rightBtn"
-            android:textColor="@drawable/button_font_color"
-            android:focusable="true"
-            android:background="@color/transparent"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <com.lee.pullrefresh.ui.PullToRefreshWebView
-        android:id="@+id/webview"
-        android:background="#eeeeee"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        <android.support.v4.widget.SwipeRefreshLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/swipe_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="设备管理"
-            android:id="@+id/managerBtn"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+
+            <WebView
+                android:id="@+id/webview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+
+
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
     </RelativeLayout>
-
 </LinearLayout>

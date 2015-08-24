@@ -28,4 +28,5 @@ dependencies {
     compile files('libs/curljava.jar')
     compile 'in.srain.cube:ultra-ptr:1.0.10'
     compile files('libs/esptouch.jar')
+    compile 'info.hoang8f:android-segmented:1.0.5'
 }

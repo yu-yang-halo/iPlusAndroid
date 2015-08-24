@@ -12,4 +12,5 @@
     <string name="logining">登录中</string>
     <string name="configing">配置中...</string>
     <string name="downloading">下载中...</string>
+    <string name="registering">注册中...</string>
 </resources>

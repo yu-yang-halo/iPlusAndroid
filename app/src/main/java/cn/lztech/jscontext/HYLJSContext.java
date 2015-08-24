@@ -21,7 +21,9 @@ import cn.elnet.andrmb.elconnector.ClassObject;
 import cn.elnet.andrmb.elconnector.DeviceObject;
 import cn.elnet.andrmb.elconnector.WSConnector;
 import cn.elnet.andrmb.elconnector.WSException;
+import cn.elnet.andrmb.elconnector.util.MD5Generator;
 import cn.lztech.ProgressHUD;
+import cn.lztech.RegexUtils;
 import cn.lztech.cache.HYLSharePreferences;
 import cn.lztech.cache.HYLUserResourceConfig;
 import cn.lztech.newiplus.R;
@@ -41,6 +43,7 @@ public class HYLJSContext {
     private Gson gson=new Gson();
     public  Bundle needBundle;
     private DeviceObject deviceObject;
+    private ProgressHUD grobalProgress;
 
     public HYLJSContext(Context context, WebView webView) {
         this.mContext = context;
@@ -84,9 +87,19 @@ public class HYLJSContext {
                 case 2:
                     mhylhandler.onRefreshDevice();
                     break;
+                case 3:
+                    dismissDialog();
+                    JNAResult result=new JNAResult();
+                    result.isSuc=true;
+                    mhylhandler.onSimpleCallback(result);
+                    break;
                 case  10000:
                     Toast.makeText(mContext, msg.getData().getString(key_errormessageKEY), Toast.LENGTH_SHORT).show();
                     mhylhandler.onRefreshDevice();
+                    break;
+                case 10001:
+                    dismissDialog();
+                    Toast.makeText(mContext, msg.getData().getString(key_errormessageKEY), Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;
@@ -94,6 +107,12 @@ public class HYLJSContext {
 
         }
     };
+
+    private void dismissDialog(){
+        if(grobalProgress!=null){
+            grobalProgress.dismiss();
+        }
+    }
 
     @JavascriptInterface
     public void mobile_updateDeviceName(final String name, final String objectId){
@@ -133,7 +152,7 @@ public class HYLJSContext {
                 } catch (WSException e) {
                     msg.what=10000;
                     Bundle bundle=new Bundle();
-                    bundle.putString(key_errormessageKEY,e.getErrorMsg());
+                    bundle.putString(key_errormessageKEY, e.getErrorMsg());
                     msg.setData(bundle);
 
                 }
@@ -202,7 +221,42 @@ public class HYLJSContext {
         }
 
     }
+    @JavascriptInterface
+    public void mobile_registerUserInfo(final String username, final String password,String repassword, final String email, final String telephone, final String realname){
+         if("".equals(username.trim())) {
+             Toast.makeText(mContext,"用户名不能为空",Toast.LENGTH_SHORT).show();
+         }else if("".equals(password.trim())){
+             Toast.makeText(mContext,"密码不能为空",Toast.LENGTH_SHORT).show();
+         }else if(!password.trim().equals(repassword.trim())){
+             Toast.makeText(mContext,"两次输入密码不一致",Toast.LENGTH_SHORT).show();
+         }else if(!RegexUtils.isEamil(email)){
+             Toast.makeText(mContext,"邮箱格式不正确",Toast.LENGTH_SHORT).show();
+         }else{
+             grobalProgress=ProgressHUD.show(mContext, mContext.getString(R.string.registering), true, true,null);
+             new Thread(new Runnable() {
+                 @Override
+                 public void run() {
+                     Message msg=new Message();
 
+                     try {
+                         int userId=WSConnector.getInstance().createUser(username, MD5Generator.reverseMD5Value(password), email, telephone, realname);
+                         if(userId>0){
+                             msg.what=3;
+                         }
+                     } catch (WSException e) {
+                         msg.what=10001;
+                         Bundle bundle=new Bundle();
+                         bundle.putString(key_errormessageKEY,e.getErrorMsg());
+                         msg.setData(bundle);
+                     }
+                     mhander.sendMessage(msg);
+                 }
+             }).start();
+
+
+
+         }
+    }
     @JavascriptInterface
     public void mobile_loadDefaultUsernamePass(){
         Message msg = new Message();
