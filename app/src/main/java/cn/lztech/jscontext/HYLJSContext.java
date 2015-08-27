@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.elnet.andrmb.elconnector.CcsClientInfo;
 import cn.elnet.andrmb.elconnector.ClassField;
 import cn.elnet.andrmb.elconnector.ClassObject;
 import cn.elnet.andrmb.elconnector.DeviceObject;
@@ -92,6 +93,9 @@ public class HYLJSContext {
                     JNAResult result=new JNAResult();
                     result.isSuc=true;
                     mhylhandler.onSimpleCallback(result);
+                    break;
+                case 4:
+                    mhylhandler.onSimpleCallback(null);
                     break;
                 case  10000:
                     Toast.makeText(mContext, msg.getData().getString(key_errormessageKEY), Toast.LENGTH_SHORT).show();
@@ -264,7 +268,10 @@ public class HYLJSContext {
         mhander.sendMessage(msg);
 
     }
+   @JavascriptInterface
+   public void mobile_requestNeedData(){
 
+   }
 
 
 

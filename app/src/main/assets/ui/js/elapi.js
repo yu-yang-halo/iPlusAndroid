@@ -266,7 +266,13 @@ function hyl_register(username,password,repassword,email,telephone,realname){
             mobile_registerUserInfo(username,password,repassword,email,telephone,realname);
         }
 }
-
+function hyl_requestNeedData(){
+            if(browser.versions.android){
+                window.jna.mobile_requestNeedData();
+            }else{
+                mobile_requestNeedData();
+            }
+}
 
 
 

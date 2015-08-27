@@ -51,7 +51,7 @@
                     android:layout_height="wrap_content"
                     android:text="设备注册"
                     style="@style/RadioButton"
-                    android:checked="true" />
+                    android:checked="false" />
 
                 <RadioButton
                     android:id="@+id/button02"
@@ -70,7 +70,7 @@
         <android.support.v4.widget.SwipeRefreshLayout  xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/swipe_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent">
 
 
             <WebView
