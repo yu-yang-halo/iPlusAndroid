@@ -21,6 +21,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import cn.elnet.andrmb.elconnector.WSConnector;
 import cn.lztech.ProgressHUD;
 import cn.lztech.RegexUtils;
@@ -53,7 +55,7 @@ public class HYLSettingFragment extends HeaderFragment{
         leftBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 getActivity().onBackPressed();
+                getActivity().onBackPressed();
             }
         });
 
@@ -90,12 +92,25 @@ public class HYLSettingFragment extends HeaderFragment{
 
                         @Override
                         public void onFinishedDownload(boolean issuc) {
+                            new MaterialDialog.Builder(HYLSettingFragment.this.getActivity())
+                                    .title("选择")
+                                    .items(new String[]{"智能家居","农业物联网"})
+                                    .itemsCallback(new MaterialDialog.ListCallback() {
+                                        @Override
+                                        public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                        }
+                                    })
+                                    .show();
+                           /*
                             mProgressHUD.dismiss();
                             if(issuc){
                                 Toast.makeText(mcontext,"下载成功",Toast.LENGTH_LONG).show();
                                 HYLSharePreferences.cacheDownloadDirName(mcontext, usernamePasswords[0]);
                                 updateUsingStatusInfo();
+                            }else{
+                                Toast.makeText(mcontext,"资源下载失败",Toast.LENGTH_LONG).show();
                             }
+                            */
                         }
 
                     });

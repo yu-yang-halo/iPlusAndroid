@@ -20,9 +20,12 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import cn.elnet.andrmb.elconnector.CcsClientInfo;
+import cn.elnet.andrmb.elconnector.DeviceObject;
 import cn.elnet.andrmb.elconnector.WSConnector;
 import cn.elnet.andrmb.elconnector.WSException;
 import cn.lztech.cache.HYLResourceUtils;
@@ -39,7 +42,7 @@ public class HYLManagerFragment extends HeaderFragment {
     private RadioButton radioButton0;
     private RadioButton radioButton1;
 
-    private int currentPage=0;
+    private int currentPage=1;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,7 +52,7 @@ public class HYLManagerFragment extends HeaderFragment {
         mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                webView.reload();
+                new DataRequestTask().execute((String[]) null);
             }
         });
         mSwipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
@@ -73,6 +76,8 @@ public class HYLManagerFragment extends HeaderFragment {
                 if (progress == 100) {
                     mSwipeLayout.setRefreshing(false);
                     Log.i("progress ", "" + progress);
+                    loadRadioButtons();
+                    new DataRequestTask().execute((String[]) null);
                 } else {
                     if (!mSwipeLayout.isRefreshing()) {
                         mSwipeLayout.setRefreshing(true);
@@ -89,9 +94,10 @@ public class HYLManagerFragment extends HeaderFragment {
         JSContext.setCurrentHandler(new HYLJSContext.HYLJNAHandler() {
             @Override
             public void onSimpleCallback(HYLJSContext.JNAResult result) {
-                   if(result==null){
-                       loadRadioButtons();
-                   }
+                if (result == null) {
+
+                    new DataRequestTask().execute((String[]) null);
+                }
             }
 
             @Override
@@ -106,18 +112,26 @@ public class HYLManagerFragment extends HeaderFragment {
         });
         webView.addJavascriptInterface(JSContext, "jna");
 
+
+
         return view;
     }
-    public class DataRequestTask extends AsyncTask<String,Void,String>{
+    public class DataRequestTask extends AsyncTask<String,Void,String[]>{
 
         @Override
-        protected String doInBackground(String... params) {
+        protected String[] doInBackground(String... params) {
             try {
                 List<CcsClientInfo> ccsClientInfos=WSConnector.getInstance().getCcsListByUser();
+                Map<Integer, DeviceObject> devsmap=WSConnector.getInstance().getObjectListAndFieldsByUser();
+                Collection<DeviceObject> devlist= devsmap.values();
+
                 Gson gson=new Gson();
                 String ccsClientInfoStr=gson.toJson(ccsClientInfos);
+                String alldevobjJSON= gson.toJson(devlist);
+
+                Log.i("alldevobjJSON", alldevobjJSON);
                 Log.e("ccsClientInfoStr",ccsClientInfoStr);
-                return ccsClientInfoStr;
+                return new String[]{ccsClientInfoStr,alldevobjJSON};
             } catch (WSException e) {
                 e.printStackTrace();
             }
@@ -127,13 +141,16 @@ public class HYLManagerFragment extends HeaderFragment {
 
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
+            if (!mSwipeLayout.isRefreshing()) {
+                mSwipeLayout.setRefreshing(true);
+            }
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            if(s!=null&&!"".equals(s.trim())){
-
+        protected void onPostExecute(String[] s) {
+            mSwipeLayout.setRefreshing(false);
+            if(s!=null&&s.length==2){
+                webView.loadUrl("javascript:hyl_loadAsynData("+s[0]+","+s[1]+")");
             }
         }
     }
@@ -145,11 +162,12 @@ public class HYLManagerFragment extends HeaderFragment {
         radioButton0= (RadioButton) view.findViewById(R.id.button01);
         radioButton1= (RadioButton) view.findViewById(R.id.button02);
 
-        loadRadioButtons();
+        radioButton0.setEnabled(false);
 
         segmentedGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+
                 switch (checkedId) {
                     case R.id.button01:
                         currentPage=0;
@@ -183,8 +201,9 @@ public class HYLManagerFragment extends HeaderFragment {
                 radioButton0.setChecked(false);
                 radioButton1.setChecked(true);
             }
-            webView.loadUrl("javascript:hyl_switchPage("+currentPage+")");
+
         }
+        webView.loadUrl("javascript:hyl_switchPage("+currentPage+")");
 
     }
 }

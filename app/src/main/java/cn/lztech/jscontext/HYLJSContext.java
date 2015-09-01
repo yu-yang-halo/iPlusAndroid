@@ -269,10 +269,25 @@ public class HYLJSContext {
 
     }
    @JavascriptInterface
-   public void mobile_requestNeedData(){
+   public void mobile_deleteDevice(final int objectId){
+       new Thread(new Runnable() {
+           @Override
+           public void run() {
+               Message msg=new Message();
 
+               try {
+                   WSConnector.getInstance().deleteObject(objectId);
+                   msg.what=4;
+               } catch (WSException e) {
+                   msg.what=10001;
+                   Bundle bundle=new Bundle();
+                   bundle.putString(key_errormessageKEY,e.getErrorMsg());
+                   msg.setData(bundle);
+               }
+               mhander.sendMessage(msg);
+           }
+       }).start();
    }
-
 
 
 

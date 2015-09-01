@@ -26,11 +26,8 @@
             <div class='group'>
                  <label class='titleCls'>设备的SN号</label>
                  <div>
-                 	<select>
-                 		<option>BFF00190000</option>
-                 		<option>BFF00190001</option>
-                 		<option>BFF00190002</option>
-                 		<option>BFF00190003</option>
+                 	<select id="snlist">
+
                  	</select>
                  </div>
             </div>
@@ -75,61 +72,7 @@
         
         <div class='deletePage'>
             	<table id="deleteTable" >
-			         <tr>
-			         	<td class="content"><img class='icon' ></img></td>
-			         	<td class='content'>
-			         		<div>
-			         			<label class='name'>DeviceNAME</label>
-                                <img class='onlineImg' src='img/icon_online.png'></img>
-                                <label class='onlineText'>在线</label>
-                                
-                            </div>
-			         	</td>
-			         	<td class='command'>
-			         		<a href="javascript:void(0);" class="deleteBtn">删除</a>
-			         	</td>
-			         </tr>
-			         <tr>
-			         	<td class="content"><img class='icon' ></img></td>
-			         	<td class='content'>
-			         		<div>
-			         			<label class='name'>DeviceNAME</label>
-                                <img class='onlineImg' src='img/icon_online.png'></img>
-                                <label class='onlineText'>在线</label>
-                                
-                            </div>
-			         	</td>
-			         	<td class='command'>
-			         		<a href="javascript:void(0);" class="deleteBtn">删除</a>
-			         	</td>
-			         </tr>
-			         <tr>
-			         	<td class="content"><img class='icon' ></img></td>
-			         	<td class='content'>
-			         		<div>
-			         			<label class='name'>DeviceNAME</label>
-                                <img class='onlineImg' src='img/icon_online.png'></img>
-                                <label class='onlineText'>在线</label>
-                                
-                            </div>
-			         	</td>
-			         	<td class='command'>
-			         		<a href="javascript:void(0);" class="deleteBtn">删除</a>
-			         	</td>
-			         </tr>
-			         <tr>
-			         	<td class="content"><img class='icon' ></img></td>
-			         	<td class='content'>
-			         		<div>
-			         			<label class='name'>DeviceNAME</label>
-                                <img class='onlineImg' src='img/icon_online.png'></img>
-                                <label class='onlineText'>在线</label>
-                            </div>
-			         	</td>
-			         	<td class='command'>
-			         		<a href="javascript:void(0);" class="deleteBtn">删除</a>
-			         	</td>
-			         </tr>
+
 		        </table>
         </div>
         
@@ -141,7 +84,16 @@
            $(document).ready(function(){
 
            })
-           function hyl_loadAsynData(ccsInfos){
+           function hyl_loadAsynData(ccsInfos,devinfos){
+                $("#snlist").empty();
+                for(var i=0;i<ccsInfos.length;i++){
+                   var option = $("<option>").val(i).text(ccsInfos[i].clientSn);
+                   $("#snlist").append(option);
+                }
+
+                $("#deleteTable").empty();
+
+                initTableData(devinfos);
 
            }
            function hyl_switchPage(currentPage){
@@ -153,5 +105,36 @@
                    $(".deletePage").show();
                 }
            }
+           function netstateImage(netState){
+               if(netState==0){
+                  return "img/icon_offline.png";
+               }else{
+                  return "img/icon_online.png";
+               }
+           }
+           function netstateText(netState){
+               if(netState==0){
+                  return "离线";
+               }else{
+                  return "在线";
+               }
+           }
+           function initTableData(devinfos){
+             if(devinfos!=undefined&&devinfos.length>0){
+		            for(var i=0;i<devinfos.length;i++){
+                        var obj=devinfos[i];
+		              	var tr_html_string="<tr><td class='content'><img class='icon'></img>"+
+		              	"</td><td class='content'><div><label class='name'>"+obj.name+"</label>"+
+		              	"<img class='onlineImg' src='"+netstateImage(obj.netState)+"'></img>"+
+		              	"<label class='onlineText'>"+netstateText(obj.netState)+"</label>"+
+		              	"</div></td><td class='command'><a  href='javascript:hyl_deleteDevice("+obj.objectId+")' class='deleteBtn'>删除</a></td></tr>";
+                        $("#deleteTable").append(tr_html_string);
+                       }
+
+		    }else{
+		            $("#deleteTable").append("<p color='red'>没有设备数据</p>");
+		    }
+           }
+
     </script>
 </html>

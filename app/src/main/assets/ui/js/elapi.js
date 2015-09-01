@@ -131,7 +131,7 @@ function hyl_loadDevicesData(devices,classTable,classIcon){
             
 			
 			trString+="<td class='content'><div>"+
-			"<label class='name'>"+obj.name+"</label>"
+			"<label class='name'>"+obj.name+"</label>";
             
             var tmp_online_icon="img/icon_online.png";
             var tmp_online_content="在线";
@@ -273,7 +273,14 @@ function hyl_requestNeedData(){
                 mobile_requestNeedData();
             }
 }
-
+//设备删除
+function hyl_deleteDevice(objectId){
+             if(browser.versions.android){
+                   window.jna.mobile_deleteDevice(objectId);
+              }else{
+                   mobile_deleteDevice(objectId);
+              }
+}
 
 
 
