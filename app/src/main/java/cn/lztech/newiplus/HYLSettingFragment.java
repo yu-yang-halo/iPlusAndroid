@@ -11,28 +11,43 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
+
+import com.orhanobut.dialogplus.DialogPlus;
+import com.orhanobut.dialogplus.Holder;
+import com.orhanobut.dialogplus.ListHolder;
+import com.orhanobut.dialogplus.OnBackPressListener;
+import com.orhanobut.dialogplus.OnCancelListener;
+import com.orhanobut.dialogplus.OnClickListener;
+import com.orhanobut.dialogplus.OnDismissListener;
+import com.orhanobut.dialogplus.OnItemClickListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.elnet.andrmb.elconnector.WSConnector;
 import cn.lztech.ProgressHUD;
 import cn.lztech.RegexUtils;
+import cn.lztech.adapter.DialogAdapter;
 import cn.lztech.cache.HYLResourceUtils;
 import cn.lztech.cache.HYLSharePreferences;
 
 /**
  * Created by Administrator on 2015/7/22.
  */
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class HYLSettingFragment extends HeaderFragment{
     EditText serveripEdit;
     TextView customResStatusTextView;
@@ -85,6 +100,10 @@ public class HYLSettingFragment extends HeaderFragment{
             @Override
             public void onClick(View v) {
 
+               // showPlusDialog();
+
+
+
                 final String[] usernamePasswords = HYLSharePreferences.getUsernamePassword(mcontext);
                 if (usernamePasswords != null && usernamePasswords.length == 2) {
                     mProgressHUD = ProgressHUD.show(mcontext, mcontext.getString(R.string.downloading), true, true, null);
@@ -92,16 +111,6 @@ public class HYLSettingFragment extends HeaderFragment{
 
                         @Override
                         public void onFinishedDownload(boolean issuc) {
-                            new MaterialDialog.Builder(HYLSettingFragment.this.getActivity())
-                                    .title("选择")
-                                    .items(new String[]{"智能家居","农业物联网"})
-                                    .itemsCallback(new MaterialDialog.ListCallback() {
-                                        @Override
-                                        public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                        }
-                                    })
-                                    .show();
-                           /*
                             mProgressHUD.dismiss();
                             if(issuc){
                                 Toast.makeText(mcontext,"下载成功",Toast.LENGTH_LONG).show();
@@ -110,13 +119,14 @@ public class HYLSettingFragment extends HeaderFragment{
                             }else{
                                 Toast.makeText(mcontext,"资源下载失败",Toast.LENGTH_LONG).show();
                             }
-                            */
+
                         }
 
                     });
                 } else {
                     Toast.makeText(mcontext, mcontext.getString(R.string.err_fisrt_login), Toast.LENGTH_SHORT).show();
                 }
+
             }
         });
 
@@ -148,7 +158,7 @@ public class HYLSettingFragment extends HeaderFragment{
                 Log.e("afterTextChanged", s.toString());
 
                 if (RegexUtils.isIPAddress(s.toString())) {
-                    HYLSharePreferences.cacheServerIP(getActivity(),s.toString());
+                    HYLSharePreferences.cacheServerIP(getActivity(), s.toString());
                 }
 
             }
@@ -193,5 +203,55 @@ public class HYLSettingFragment extends HeaderFragment{
         hylhandler=(OnHYLWebHandler)activity;
     }
 
+    private void showPlusDialog(){
+        OnClickListener clickListener = new OnClickListener() {
+            @Override
+            public void onClick(DialogPlus dialog, View view) {
+
+            }
+        };
+        OnItemClickListener itemClickListener = new OnItemClickListener() {
+            @Override
+            public void onItemClick(DialogPlus dialog, Object item, View view, int position) {
+                TextView textView = (TextView) view.findViewById(R.id.text_view);
+                String clickedAppName = textView.getText().toString();
+                Toast.makeText(HYLSettingFragment.this.getActivity(),""+clickedAppName,Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+            }
+        };
+
+        OnDismissListener dismissListener = new OnDismissListener() {
+            @Override
+            public void onDismiss(DialogPlus dialog) {
+                //  Toast.makeText(HYLSettingFragment.this.getActivity(),"onDismiss",Toast.LENGTH_LONG).show();
+            }
+        };
+
+        OnCancelListener cancelListener = new OnCancelListener() {
+            @Override
+            public void onCancel(DialogPlus dialog) {
+                //Toast.makeText(HYLSettingFragment.this.getActivity(),"onCancel",Toast.LENGTH_LONG).show();
+            }
+        };
+
+        List<String> stringList=new ArrayList<String>();
+        stringList.add("农业物联");
+        stringList.add("智能家居");
+        DialogAdapter dialogAdapter=new DialogAdapter(stringList,HYLSettingFragment.this.getActivity());
+
+        final DialogPlus dialog = DialogPlus.newDialog(HYLSettingFragment.this.getActivity())
+                .setContentHolder(new ListHolder())
+                .setHeader(R.layout.dialog_title)
+                .setCancelable(true)
+                .setGravity(Gravity.CENTER)
+                .setAdapter(dialogAdapter)
+                .setOnClickListener(clickListener)
+                .setOnItemClickListener(itemClickListener)
+                .setOnDismissListener(dismissListener)
+                .setOnCancelListener(cancelListener)
+                .setExpanded(false)
+                .create();
+        dialog.show();
+    }
 
 }

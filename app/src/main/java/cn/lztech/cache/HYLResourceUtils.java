@@ -2,16 +2,21 @@ package cn.lztech.cache;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -20,6 +25,7 @@ import java.util.Enumeration;
 
 
 import cn.elnet.andrmb.elconnector.WSConnector;
+import cn.lztech.bean.AppTagGson;
 
 /**
  * Created by Administrator on 2015/7/21.
@@ -28,8 +34,6 @@ public class HYLResourceUtils {
     public interface  HYLResourceUtilsCallback{
         public  void onFinishedDownload(boolean issuc);
     }
-
-
     public  static void startDownloadUI(final Context ctx, final String fileName,HYLResourceUtilsCallback callback){
         if(callback==null){
             callback=new HYLResourceUtilsCallback(){
@@ -48,6 +52,9 @@ public class HYLResourceUtils {
         downloadUIResources(ctx, fileName, callback);
     }
 
+
+
+
     public static  boolean isUseCustomResource(Context ctx){
         if(HYLSharePreferences.getDownloadDirName(ctx)!=null){
             return true;
@@ -62,7 +69,7 @@ public class HYLResourceUtils {
 
     public  static  String rootPath(Context ctx){
         String dirName= HYLSharePreferences.getDownloadDirName(ctx);
-        if(dirName==null){
+        if(enableAssetAvailable(ctx)){
             return "file:///android_asset/";
         }else{
             return  "file:///"+ctx.getFilesDir().getPath()+"/"+dirName+"/";
@@ -75,6 +82,19 @@ public class HYLResourceUtils {
             return null;
         }
     }
+    private static boolean enableAssetAvailable(Context ctx){
+        String uiPath=userCustomUIResPath(ctx);
+        if(uiPath==null){
+            return true;
+        }else{
+            File uifile=new File(uiPath);
+            if(uifile.exists()){
+                return false;
+            }else{
+                return true;
+            }
+        }
+    }
     public static String userCustomRootPath(Context ctx){
         String dirName= HYLSharePreferences.getDownloadDirName(ctx);
         if(dirName!=null){
@@ -83,6 +103,78 @@ public class HYLResourceUtils {
             return null;
         }
     }
+    public static String getStreamString(InputStream tInputStream){
+        if (tInputStream != null){
+            try{
+                BufferedReader tBufferedReader = new BufferedReader(new InputStreamReader(tInputStream));
+                StringBuffer tStringBuffer = new StringBuffer();
+                String sTempOneLine = new String("");
+                while ((sTempOneLine = tBufferedReader.readLine()) != null){
+                    tStringBuffer.append(sTempOneLine);
+                }
+                return tStringBuffer.toString();
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+        }
+        return null;
+    }
+    public static void loadAppTagJSON(Context ctx){
+
+          new LoadAppTagJSOnTask(ctx).execute((String[]) null);
+    }
+
+    static class LoadAppTagJSOnTask extends  AsyncTask<String,String,String>{
+        Context ctx;
+
+        LoadAppTagJSOnTask(Context ctx){
+            this.ctx=ctx;
+        }
+        @Override
+        protected String doInBackground(String... params) {
+            String appTagJSONPath="http://"+WSConnector.getInstance().getIP1()+"/public_cloud/upload/appTag.json";
+            URL url= null;
+            try {
+                url = new URL(appTagJSONPath);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            URLConnection connection= null;
+            try {
+                connection = url.openConnection();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            InputStream  inputStream = null;
+            try {
+                inputStream = connection.getInputStream();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if(inputStream!=null){
+                String tagAppString=getStreamString(inputStream);
+                return tagAppString;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if(s!=null){
+                HYLSharePreferences.cacheAppTagJson(ctx,s);
+                Toast.makeText(ctx,"缓存app tag json 成功",Toast.LENGTH_LONG).show();
+            }else{
+                Toast.makeText(ctx,"数据获取失败",Toast.LENGTH_LONG).show();
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+    }
+
 
     private static void downloadUIResources(Context ctx, String fileName,HYLResourceUtilsCallback block){
         String fileURL="http://"+WSConnector.getInstance().getIP1()+"/public_cloud/upload/"+fileName+".zip";
@@ -92,6 +184,9 @@ public class HYLResourceUtils {
         newTask.setBlock(block);
         newTask.execute((String[]) null);
     }
+
+
+
     static  class UIDownloadTask extends AsyncTask<String,String,String>{
         String filePath;
         File toSavePath;

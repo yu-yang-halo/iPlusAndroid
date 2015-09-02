@@ -22,7 +22,7 @@ label{
     width: 80px;
     display: inline-block;
 }
-input{
+.row0 input{
     background-repeat:round;
     background-color: transparent;
     padding-left: 40px;
@@ -44,6 +44,75 @@ div{
 }
 button{
     margin-top:30px;
-    width:120px;
+    width:80px;
     height:40px;
+   
+}
+.button{
+	font-size: 12px;
+	margin-left: 30px;
+}
+.row1{
+	clear: both;
+}
+
+/**
+ * Checkbox Five
+ */
+.checkboxFive {
+	width: 25px;
+	margin: 0px -5px 0px 5px;
+	position: relative;
+	display: inline-block;
+}
+
+/**
+ * Create the box for the checkbox
+ */
+.checkboxFive label {
+	cursor: pointer;
+	position: absolute;
+	width: 25px;
+	height: 25px;
+	top: 0;
+  	left: 0;
+	background: #eee;
+	border:1px solid #ddd;
+}
+
+/**
+ * Display the tick inside the checkbox
+ */
+.checkboxFive label:after {
+	opacity: 0.0;
+	content: '';
+	position: absolute;
+	width: 9px;
+	height: 5px;
+	background: transparent;
+	top: 6px;
+	left: 7px;
+	border: 3px solid #333;
+	border-top: none;
+	border-right: none;
+
+	-webkit-transform: rotate(-45deg);
+	-moz-transform: rotate(-45deg);
+	-o-transform: rotate(-45deg);
+	-ms-transform: rotate(-45deg);
+	transform: rotate(-45deg);
+}
+
+/**
+ * Create the hover event of the tick
+ */
+.checkboxFive label:hover::after {
+	opacity: 0.0;
+}
+
+/**
+ * Create the checkbox state for the tick
+ */
+.checkboxFive input[type=checkbox]:checked + label:after {
+	opacity: 1;
 }

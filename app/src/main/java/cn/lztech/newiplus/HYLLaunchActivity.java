@@ -48,6 +48,13 @@ public class HYLLaunchActivity extends Activity {
             WSConnector.getInstance(serverIP,"8080",false);
         }
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        HYLResourceUtils.loadAppTagJSON(this);
+    }
+
     public Handler mhandler=new Handler(){
         @Override
         public void handleMessage(Message msg) {

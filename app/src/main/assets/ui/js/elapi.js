@@ -33,12 +33,11 @@ var browser={
 
 
 //登录模块
-function hyl_login(username,password){
-
+function hyl_login(username,password,ischecked){
     if(browser.versions.android){
-       window.jna.mobile_login(username,password);
+       window.jna.mobile_login(username,password,ischecked);
     }else{
-       mobile_login(username,password);
+       mobile_login(username,password,ischecked);
     }
 }
 function hyl_setUsernamePassToView(username,password){

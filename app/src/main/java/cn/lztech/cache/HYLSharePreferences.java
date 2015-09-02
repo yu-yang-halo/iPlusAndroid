@@ -13,6 +13,7 @@ import cn.elnet.andrmb.elconnector.ClassField;
 import cn.elnet.andrmb.elconnector.ClassObject;
 import cn.elnet.andrmb.elconnector.WSConnector;
 import cn.elnet.andrmb.elconnector.WSException;
+import cn.lztech.bean.AppTagGson;
 
 /**
  * Created by Administrator on 2015/7/17.
@@ -27,6 +28,26 @@ public class HYLSharePreferences {
 
     private final  static  String wifissid_key="cn.lztech.iPlus.wifissid_key";
     private final  static  String server_IP_key="cn.lztech.iPlus.server_IP_key";
+
+    private final  static  String app_Tag_JSON_key="cn.lztech.iPlus.app_Tag_JSON_key";
+
+    public static void cacheAppTagJson(Context ctx,String appTagJSON){
+        SharedPreferences sharedPref = ctx.getSharedPreferences(preference_key, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(app_Tag_JSON_key,appTagJSON);
+        editor.commit();
+    }
+    public  static AppTagGson getAppTagJSON(Context ctx){
+        SharedPreferences sharedPreferences=ctx.getSharedPreferences(preference_key, Context.MODE_PRIVATE);
+        String apptagString=sharedPreferences.getString(app_Tag_JSON_key, null);
+        if(apptagString==null){
+            return null;
+        }
+        Gson gson=new Gson();
+        AppTagGson appTagGson=gson.fromJson(apptagString, AppTagGson.class);
+        return appTagGson;
+    }
+
 
     public static void  cacheServerIP(Context ctx,String serverIP){
         SharedPreferences sharedPref = ctx.getSharedPreferences(preference_key, Context.MODE_PRIVATE);
@@ -74,6 +95,14 @@ public class HYLSharePreferences {
         editor.putString(password_key,password);
         editor.commit();
     }
+    public static void clearUsernamePassword(Context ctx){
+        SharedPreferences sharedPref = ctx.getSharedPreferences(preference_key, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(userbname_key,null);
+        editor.putString(password_key,null);
+        editor.commit();
+    }
+
     public static String[] getUsernamePassword(Context ctx){
         SharedPreferences sharedPreferences=ctx.getSharedPreferences(preference_key,Context.MODE_PRIVATE);
         String username=sharedPreferences.getString(userbname_key, null);

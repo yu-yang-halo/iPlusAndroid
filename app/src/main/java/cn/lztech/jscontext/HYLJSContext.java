@@ -68,10 +68,12 @@ public class HYLJSContext {
             switch (msg.what) {
                 case 0:
                     String[] userpass = HYLSharePreferences.getUsernamePassword(mContext);
+                    boolean isChecked=false;
                     if (userpass != null) {
+                        isChecked=true;
                         mwebView.loadUrl("javascript: hyl_setUsernamePassToView('" + userpass[0] + "','" + userpass[1] + "')");
                     }
-
+                    mwebView.loadUrl("javascript:initCheckBox("+isChecked+")");
                     break;
                 case 1:
                     HYLUserResourceConfig.HYLFieldList hylFieldList=HYLUserResourceConfig.loadFieldsConfig(mContext);
@@ -215,12 +217,15 @@ public class HYLJSContext {
 
 
     @JavascriptInterface
-    public void mobile_login(String  username,String password){
-
+    public void mobile_login(String  username,String password,boolean checked){
         if("".equals(username.trim())||"".equals(password.trim())){
             Toast.makeText(mContext,mContext.getString(R.string.err_username_pass),Toast.LENGTH_SHORT).show();
         }else{
-            HYLSharePreferences.cacheUsernamePassword(mContext,username,password);
+            if(checked){
+                HYLSharePreferences.cacheUsernamePassword(mContext,username,password);
+            }else{
+                HYLSharePreferences.clearUsernamePassword(mContext);
+            }
             new RequestNetTask(RequestType.REQUEST_TYPE_LOGIN,mhylhandler).execute(username, password);
         }
 
