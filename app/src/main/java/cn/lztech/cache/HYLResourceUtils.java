@@ -163,9 +163,9 @@ public class HYLResourceUtils {
         protected void onPostExecute(String s) {
             if(s!=null){
                 HYLSharePreferences.cacheAppTagJson(ctx,s);
-                Toast.makeText(ctx,"缓存app tag json 成功",Toast.LENGTH_LONG).show();
+               // Toast.makeText(ctx,"缓存app tag json 成功",Toast.LENGTH_LONG).show();
             }else{
-                Toast.makeText(ctx,"数据获取失败",Toast.LENGTH_LONG).show();
+               // Toast.makeText(ctx,"数据获取失败",Toast.LENGTH_LONG).show();
             }
         }
 

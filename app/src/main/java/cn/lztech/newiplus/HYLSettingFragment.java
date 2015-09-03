@@ -42,6 +42,7 @@ import cn.elnet.andrmb.elconnector.WSConnector;
 import cn.lztech.ProgressHUD;
 import cn.lztech.RegexUtils;
 import cn.lztech.adapter.DialogAdapter;
+import cn.lztech.bean.AppTagGson;
 import cn.lztech.cache.HYLResourceUtils;
 import cn.lztech.cache.HYLSharePreferences;
 
@@ -100,32 +101,10 @@ public class HYLSettingFragment extends HeaderFragment{
             @Override
             public void onClick(View v) {
 
-               // showPlusDialog();
+                showPlusDialog();
 
 
 
-                final String[] usernamePasswords = HYLSharePreferences.getUsernamePassword(mcontext);
-                if (usernamePasswords != null && usernamePasswords.length == 2) {
-                    mProgressHUD = ProgressHUD.show(mcontext, mcontext.getString(R.string.downloading), true, true, null);
-                    HYLResourceUtils.startDownloadUI(mcontext, usernamePasswords[0],new HYLResourceUtils.HYLResourceUtilsCallback(){
-
-                        @Override
-                        public void onFinishedDownload(boolean issuc) {
-                            mProgressHUD.dismiss();
-                            if(issuc){
-                                Toast.makeText(mcontext,"下载成功",Toast.LENGTH_LONG).show();
-                                HYLSharePreferences.cacheDownloadDirName(mcontext, usernamePasswords[0]);
-                                updateUsingStatusInfo();
-                            }else{
-                                Toast.makeText(mcontext,"资源下载失败",Toast.LENGTH_LONG).show();
-                            }
-
-                        }
-
-                    });
-                } else {
-                    Toast.makeText(mcontext, mcontext.getString(R.string.err_fisrt_login), Toast.LENGTH_SHORT).show();
-                }
 
             }
         });
@@ -169,7 +148,13 @@ public class HYLSettingFragment extends HeaderFragment{
     }
     private  void  updateUsingStatusInfo(){
         if(HYLResourceUtils.isUseCustomResource(mcontext)){
-            customResStatusTextView.setText(mcontext.getString(R.string.text_using));
+            String appTag=HYLSharePreferences.getCurrentAppTag(mcontext, HYLSharePreferences.getDownloadDirName(mcontext));
+            if(appTag==null){
+                customResStatusTextView.setText("");
+            }else{
+                customResStatusTextView.setText(appTag);
+            }
+
             systemResStatusTextView.setText(mcontext.getString(R.string.text_no_use));
         }else{
             customResStatusTextView.setText(mcontext.getString(R.string.text_no_use));
@@ -204,6 +189,11 @@ public class HYLSettingFragment extends HeaderFragment{
     }
 
     private void showPlusDialog(){
+        AppTagGson appTagGson=HYLSharePreferences.getAppTagJSON(HYLSettingFragment.this.getActivity());
+
+        final List<AppTagGson.AppTagInfo> appTagInfos=appTagGson.getTagList();
+
+
         OnClickListener clickListener = new OnClickListener() {
             @Override
             public void onClick(DialogPlus dialog, View view) {
@@ -213,10 +203,8 @@ public class HYLSettingFragment extends HeaderFragment{
         OnItemClickListener itemClickListener = new OnItemClickListener() {
             @Override
             public void onItemClick(DialogPlus dialog, Object item, View view, int position) {
-                TextView textView = (TextView) view.findViewById(R.id.text_view);
-                String clickedAppName = textView.getText().toString();
-                Toast.makeText(HYLSettingFragment.this.getActivity(),""+clickedAppName,Toast.LENGTH_LONG).show();
                 dialog.dismiss();
+                downloadApp(appTagInfos.get(position-1).getUserName());
             }
         };
 
@@ -234,10 +222,9 @@ public class HYLSettingFragment extends HeaderFragment{
             }
         };
 
-        List<String> stringList=new ArrayList<String>();
-        stringList.add("农业物联");
-        stringList.add("智能家居");
-        DialogAdapter dialogAdapter=new DialogAdapter(stringList,HYLSettingFragment.this.getActivity());
+
+
+        DialogAdapter dialogAdapter=new DialogAdapter(appTagInfos,HYLSettingFragment.this.getActivity());
 
         final DialogPlus dialog = DialogPlus.newDialog(HYLSettingFragment.this.getActivity())
                 .setContentHolder(new ListHolder())
@@ -252,6 +239,25 @@ public class HYLSettingFragment extends HeaderFragment{
                 .setExpanded(false)
                 .create();
         dialog.show();
+    }
+    private void downloadApp(final String appName){
+            mProgressHUD = ProgressHUD.show(mcontext, mcontext.getString(R.string.downloading), true, true, null);
+            HYLResourceUtils.startDownloadUI(mcontext, appName,new HYLResourceUtils.HYLResourceUtilsCallback(){
+
+                @Override
+                public void onFinishedDownload(boolean issuc) {
+                    mProgressHUD.dismiss();
+                    if(issuc){
+                        Toast.makeText(mcontext,"下载成功",Toast.LENGTH_LONG).show();
+                        HYLSharePreferences.cacheDownloadDirName(mcontext, appName);
+                        updateUsingStatusInfo();
+                    }else{
+                        Toast.makeText(mcontext,"资源下载失败",Toast.LENGTH_LONG).show();
+                    }
+
+                }
+
+            });
     }
 
 }

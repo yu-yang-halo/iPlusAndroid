@@ -15,16 +15,25 @@ public class AppTagGson {
     public void setTagList(List<AppTagInfo> tagList) {
         this.tagList = tagList;
     }
-}
-class AppTagInfo{
-    private String userName;
-    private String appTag;
+    public  class AppTagInfo{
+        private String userName;
+        private String appTag;
 
-    public String getUserName() {
-        return userName;
-    }
+        public String getAppTag() {
+            return appTag;
+        }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+        public void setAppTag(String appTag) {
+            this.appTag = appTag;
+        }
+
+        public String getUserName() {
+            return userName;
+        }
+
+        public void setUserName(String userName) {
+            this.userName = userName;
+        }
     }
 }
+

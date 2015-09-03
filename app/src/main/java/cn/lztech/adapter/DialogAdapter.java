@@ -10,15 +10,16 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import cn.lztech.bean.AppTagGson;
 import cn.lztech.newiplus.R;
 
 /**
  * Created by Administrator on 2015/9/1.
  */
 public class DialogAdapter extends BaseAdapter {
-    List<String> datas=null;
+    List<AppTagGson.AppTagInfo> datas=null;
     Context ctx;
-    public DialogAdapter(List<String> datas,Context ctx){
+    public DialogAdapter(List<AppTagGson.AppTagInfo> datas,Context ctx){
         this.datas=datas;
         this.ctx=ctx;
     }
@@ -58,7 +59,7 @@ public class DialogAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) view.getTag();
         }
         if(datas!=null){
-            viewHolder.textView.setText(datas.get(position));
+            viewHolder.textView.setText(datas.get(position).getAppTag());
         }
         return view;
     }

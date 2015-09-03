@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.List;
 import java.util.Objects;
 
 import cn.elnet.andrmb.elconnector.ClassField;
@@ -37,12 +38,29 @@ public class HYLSharePreferences {
         editor.putString(app_Tag_JSON_key,appTagJSON);
         editor.commit();
     }
+
+    public static String getCurrentAppTag(Context ctx,String userName){
+        List<AppTagGson.AppTagInfo> appTagInfos= getAppTagJSON(ctx).getTagList();
+        String appTag = null;
+        if (appTagInfos==null){
+            return null;
+        }
+        for(AppTagGson.AppTagInfo appInfo :appTagInfos){
+            if(appInfo.getUserName().equals(userName)){
+                appTag=appInfo.getAppTag();
+                break;
+            }
+        }
+        return appTag;
+    }
+
     public  static AppTagGson getAppTagJSON(Context ctx){
         SharedPreferences sharedPreferences=ctx.getSharedPreferences(preference_key, Context.MODE_PRIVATE);
         String apptagString=sharedPreferences.getString(app_Tag_JSON_key, null);
-        if(apptagString==null){
+         if(apptagString==null){
             return null;
         }
+
         Gson gson=new Gson();
         AppTagGson appTagGson=gson.fromJson(apptagString, AppTagGson.class);
         return appTagGson;
