@@ -100,11 +100,14 @@ public class HYLSettingFragment extends HeaderFragment{
         updateCustomResButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AppTagGson appTagGson=HYLSharePreferences.getAppTagJSON(HYLSettingFragment.this.getActivity());
 
-                showPlusDialog();
-
-
-
+                List<AppTagGson.AppTagInfo> appTagInfos=appTagGson.getTagList();
+                if(appTagInfos!=null&&appTagInfos.size()>0){
+                    showPlusDialog(appTagInfos);
+                }else{
+                    Toast.makeText(HYLSettingFragment.this.getActivity(),"暂时还没有发布的应用",Toast.LENGTH_LONG).show();
+                }
 
             }
         });
@@ -188,10 +191,7 @@ public class HYLSettingFragment extends HeaderFragment{
         hylhandler=(OnHYLWebHandler)activity;
     }
 
-    private void showPlusDialog(){
-        AppTagGson appTagGson=HYLSharePreferences.getAppTagJSON(HYLSettingFragment.this.getActivity());
-
-        final List<AppTagGson.AppTagInfo> appTagInfos=appTagGson.getTagList();
+    private void showPlusDialog(final List<AppTagGson.AppTagInfo> appTagInfos){
 
 
         OnClickListener clickListener = new OnClickListener() {
