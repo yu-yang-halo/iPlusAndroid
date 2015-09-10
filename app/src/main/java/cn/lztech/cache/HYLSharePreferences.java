@@ -141,6 +141,8 @@ public class HYLSharePreferences {
 
               if(((ClassField)clsObj.getClassFeilds().get(i)).getFieldId()==hylField.getFieldId()){
                   ((ClassField)clsObj.getClassFeilds().get(i)).setDisableYN(hylField.getDisableYN()==0);
+              }else{
+                  ((ClassField)clsObj.getClassFeilds().get(i)).setDisableYN(false);
               }
 
           }

@@ -55,10 +55,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     <com.lee.pullrefresh.ui.PullToRefreshWebView
-        android:id="@+id/webview"
+        android:id="@+id/webview_detail"
         android:background="#eeeeee"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+        </com.lee.pullrefresh.ui.PullToRefreshWebView>
 
         <Button
             android:layout_width="40dp"

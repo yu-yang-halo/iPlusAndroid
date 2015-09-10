@@ -63,7 +63,7 @@ public class DeviceConfigFragment extends HeaderFragment {
     }
 
     private void initPullRefreshView(View view){
-        mPullWebView = (PullToRefreshWebView) view.findViewById(R.id.webview);//new PullToRefreshWebView(this);
+        mPullWebView = (PullToRefreshWebView) view.findViewById(R.id.webview_config);//new PullToRefreshWebView(this);
         webView = mPullWebView.getRefreshableView();
 
         webView.setWebViewClient(new WebViewClient() {

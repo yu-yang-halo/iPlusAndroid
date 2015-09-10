@@ -47,7 +47,7 @@ public class HYLManagerFragment extends HeaderFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.manager,container,false);
-        webView=(WebView) view.findViewById(R.id.webview);
+        webView=(WebView) view.findViewById(R.id.webview_manager);
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

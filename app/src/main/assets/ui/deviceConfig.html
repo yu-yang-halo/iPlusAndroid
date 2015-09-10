@@ -53,7 +53,7 @@
             }else{
                 defaultVal=field.defaultValue;
             }
-            if(field.widget==3){
+            if(field.widget==3&&(!field.disableYN)){
                 configHtml+="<div class='configRow'><label>"+field.displayName
                 +"</label><input value='"+defaultVal+"' fieldId="+key+"></input> </div>";
 

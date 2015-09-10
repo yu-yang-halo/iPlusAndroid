@@ -70,7 +70,7 @@ public class DeviceInfoFragment extends HeaderFragment {
     }
 
     private void initPullRefreshView(View view){
-        mPullWebView = (PullToRefreshWebView) view.findViewById(R.id.webview);//new PullToRefreshWebView(this);
+        mPullWebView = (PullToRefreshWebView) view.findViewById(R.id.webview_info);//new PullToRefreshWebView(this);
         webView = mPullWebView.getRefreshableView();
 
         webView.setWebViewClient(new WebViewClient() {
@@ -101,7 +101,7 @@ public class DeviceInfoFragment extends HeaderFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.devicedetail,container,false);
+        View view=inflater.inflate(R.layout.deviceinfo,container,false);
         initHeaderView(view);
 
         initPullRefreshView(view);

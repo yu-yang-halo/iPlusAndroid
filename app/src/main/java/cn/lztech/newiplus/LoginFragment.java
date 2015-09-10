@@ -70,7 +70,7 @@ public class LoginFragment extends HeaderFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.login, container, false);
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
-        webView=(WebView) view.findViewById(R.id.webview);
+        webView=(WebView) view.findViewById(R.id.webview_login);
         regBtn=(Button)view.findViewById(R.id.regBtn);
 
         regBtn.setOnClickListener(new View.OnClickListener() {

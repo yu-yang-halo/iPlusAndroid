@@ -53,7 +53,7 @@
             android:layout_alignParentEnd="true" />
     </RelativeLayout>
     <com.lee.pullrefresh.ui.PullToRefreshWebView
-        android:id="@+id/webview"
+        android:id="@+id/webview_config"
         android:background="#eeeeee"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
