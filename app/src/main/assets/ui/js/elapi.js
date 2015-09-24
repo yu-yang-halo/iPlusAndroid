@@ -272,6 +272,23 @@ function hyl_requestNeedData(){
                 mobile_requestNeedData();
             }
 }
+
+function hyl_tofindPassPage(){
+            if(browser.versions.android){
+                window.jna.mobile_tofindPassPage();
+            }else{
+                 mobile_tofindPassPage();
+            }
+}
+
+function hyl_findPassCmd(phoneOrEmail){
+                if(browser.versions.android){
+                     window.jna.mobile_findPassCmd(phoneOrEmail);
+                 }else{
+                      mobile_findPassCmd(phoneOrEmail);
+                 }
+}
+
 //设备删除
 function hyl_deleteDevice(objectId){
              if(browser.versions.android){

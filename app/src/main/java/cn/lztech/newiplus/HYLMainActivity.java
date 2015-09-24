@@ -142,5 +142,14 @@ public class HYLMainActivity extends Activity  implements OnHYLWebHandler{
         transaction.commit();
     }
 
+    @Override
+    public void toFindPassPage() {
+        FindPassFragment findPassFragment=new FindPassFragment();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, findPassFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
 
 }

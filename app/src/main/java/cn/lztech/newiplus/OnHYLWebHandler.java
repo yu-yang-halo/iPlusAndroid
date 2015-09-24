@@ -15,6 +15,7 @@ public interface OnHYLWebHandler {
     public void toAppSettings();
     public void toRegister();
     public void toManagerDevice();
+    public void toFindPassPage();
 
 
 }

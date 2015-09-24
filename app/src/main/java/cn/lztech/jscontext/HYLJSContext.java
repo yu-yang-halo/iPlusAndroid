@@ -38,6 +38,7 @@ public class HYLJSContext {
     public final static  String key_deviceName="deviceName_KEY";
     public final static  String key_currentDeviceObjectJSON="currentDeviceObject_KEY";
     public final static  String key_errormessageKEY="key_errormessageKEY";
+    public final static  String key_phoneOrEmail="key_phoneOrEmail";
     public Context mContext;
     private HYLJNAHandler mhylhandler;
     private WebView mwebView;
@@ -168,6 +169,20 @@ public class HYLJSContext {
         }).start();
 
 
+    }
+
+    @JavascriptInterface
+    public void  mobile_tofindPassPage(){
+        Message msg = new Message();
+        msg.what=4;
+        mhander.sendMessage(msg);
+    }
+
+    @JavascriptInterface
+    public void  mobile_findPassCmd(String phoneOrEmail){
+        Bundle bundle=new Bundle();
+        bundle.putString(key_phoneOrEmail, phoneOrEmail);
+        mhylhandler.onSaveBundle(bundle);
     }
 
     @JavascriptInterface
